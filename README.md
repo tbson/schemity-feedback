@@ -1,3 +1,21 @@
+## About Schemity
+
+[Schemity](https://schemity.com) is a desktop ERD tool built for **domain-driven database design**.
+It helps senior engineers and architects derive bounded contexts, design relational schemas,
+and generate migrations — all offline-first with Git-native workflow.
+
+**Key features:**
+- Visual ERD with DDD concepts (bounded contexts, aggregate roots, ubiquitous language)
+- Multi-database support: PostgreSQL, MySQL, SQLite, SQL Server
+- Schema diffing & migration generation
+- Keyboard-driven (Vim navigation), offline-first
+- Very flexible relationship modeling
+- Multiple tabs and workspaces support
+- One-time purchase, no subscription
+
+👉 [Download at schemity.com](https://schemity.com/#platforms)
+
+
 # Schemity Feedback and Community
 
 Welcome to the official community feedback repository for [Schemity](https://schemity.com)! This is the best place to report bugs, request new features, and provide feedback to help us improve the application.
