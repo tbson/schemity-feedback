@@ -21,7 +21,7 @@ Compares your ERD to the live database and generates the exact SQL diff. Connect
 Your ERD lives as a JSON file in your repo. Commit it, review it in PRs, let your team pull it. Workspace separation keeps each project's diagrams where they belong - next to the code. No cloud account, no shared workspace to manage.
 
 **Local-First, Data Transparent**
-Plain JSON files in ~/schemity/ - readable, backupable, portable. No cloud dependency, no vendor lock-in. You own your data completely.
+Plain JSON files in `~/schemity/` - readable, backupable, portable. No cloud dependency, no vendor lock-in. You own your data completely.
 
 **Constraints Without the Guesswork**
 Unique constraints, check constraints, indexes, and not-null rules are part of your visual design - not afterthoughts buried in migration files. Smart color indicators make multi-column unique constraints immediately visible, so you catch domain rule conflicts before they hit production.
