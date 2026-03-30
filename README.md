@@ -4,32 +4,47 @@ Welcome to the official community feedback repository for [Schemity](https://sch
 
 ## About Schemity
 
-**Schemity** is a cross-platform ERD tool built for domain-driven database design. Model your domain visually, define bounded contexts, and turn your ERD into real SQL migrations — in a 9 MB native app that works offline. Think in domains, not in DDL.
+**Schemity** is an ERD tool for software engineers who work with relational databases. Model your domain visually, design relationships by drag and drop, and generate SQL migrations — in a 9 MB native app that works offline. Think in domains, not in DDL.
 
 ### What makes Schemity special?
 
 **Relation as First-Class Citizen**
-Full routing control, bend points, self-referencing, and advanced snapping. Create foreign keys by dragging fields between entities — 1:N, 1:1, or N:N with auto-generated junction tables. Color-coded connection lines inherit entity colors, and smart routing avoids overlaps while giving you full control through custom waypoints.
+Create foreign keys by dragging fields between entities — 1:N, 1:1, or N:N with auto-generated junction tables. No need to remember FK syntax or junction table conventions. Color-coded connection lines and smart routing keep complex diagrams readable as your schema grows.
 
-**Developer-First Simplicity**
-Drag to create a relation. Opinionated defaults — snake_case, auto FK naming, auto junction table. No DBA knowledge required. Full keyboard navigation with vim-style shortcuts, multiple tabs for working across bounded contexts, copy/paste entities between diagrams, and unlimited undo/redo. Entity templates codify common domain patterns.
+**Built for How Engineers Actually Work**
+Opinionated defaults — snake_case, auto FK naming, auto junction table — so you spend time on domain modeling, not on naming conventions. Vim-style keyboard shortcuts, multiple tabs, copy/paste between diagrams, and undo/redo make it feel like a code editor, not a drawing tool. Entity templates let you codify patterns your team uses repeatedly.
 
-**Migration Generation**
-Compares your ERD to the live database and generates the exact SQL diff — nothing more, nothing less. Connect to MySQL, PostgreSQL, or SQL Server through direct or SSH connections. Reverse-engineer existing databases into ERD diagrams, evolve the design visually, then apply migrations directly. Or work in ERD-only mode for pure domain modeling.
+**Migration Generation That Just Works**
+Compares your ERD to the live database and generates the exact SQL diff. Connect to MySQL, PostgreSQL, or SQL Server through direct or SSH connections. Reverse-engineer an existing database into an ERD, evolve the design, then apply migrations directly — or work in ERD-only mode when you just need to think through the schema.
 
-**Git-Native Collaboration**
-Clone to offline ERD, commit, team pulls. A long-lived ERD that evolves with your codebase — not locked in a cloud service. Workspace separation isolates ERDs per project, so you push diagrams to git alongside the code they belong to.
+**Git-Native, Not Cloud-Locked**
+Your ERD lives as a JSON file in your repo. Commit it, review it in PRs, let your team pull it. Workspace separation keeps each project's diagrams where they belong — next to the code. No cloud account, no shared workspace to manage.
 
 **Local-First, Data Transparent**
-Plain JSON files in ~/schemity/ — readable, backupable, portable. You own your data completely. No cloud dependency, no vendor lock-in.
+Plain JSON files in ~/schemity/ — readable, backupable, portable. No cloud dependency, no vendor lock-in. You own your data completely.
 
-**Constraints as First-Class Citizens**
-Unique constraints, check constraints, indexes, and not-null rules are all part of your visual design — not afterthoughts buried in migration files. Smart color indicators make multi-column unique constraints immediately visible, so domain invariants stay front and center.
+**Constraints Without the Guesswork**
+Unique constraints, check constraints, indexes, and not-null rules are part of your visual design — not afterthoughts buried in migration files. Smart color indicators make multi-column unique constraints immediately visible, so you catch domain rule conflicts before they hit production.
 
-**9 MB Bundle**
-No JVM, no Electron, no Chromium. Built with Native WebView and Rust — fast to download, instant to launch. Fully offline, air-gapped, behind VPN. No internet connection required — ever. Native apps for macOS, Windows, and Linux (Ubuntu family).
+**9 MB. No Electron. No JVM.**
+Built with Native WebView and Rust. Fast to download, instant to launch. Works offline, behind VPN, air-gapped. macOS, Windows, and Linux.
 
-Whether you're architecting a new system from domain concepts, maintaining a growing schema, or aligning your database with your domain model — Schemity bridges the gap between how you think about your data and how it lives in the database.
+### Who is Schemity for?
+
+Schemity is for **any software engineer who works with relational databases**:
+
+- **Starting a new project** — model your domain visually before writing a single migration
+- **Joining an existing codebase** — reverse-engineer the database into an ERD to understand the schema fast
+- **Evolving a growing schema** — see the full picture, design changes visually, generate precise migrations
+- **Collaborating with a team** — commit your ERD to git, review schema changes in PRs like code
+
+No DBA knowledge required. If you can design a database table, you can use Schemity.
+
+### Pricing
+
+**$129 one-time** — includes 1 year of updates. $69/year to keep getting updates after that. Your app keeps working forever, even if you don't renew.
+
+Free for education. 2-week trial for commercial use — and the app stays usable after the trial ends.
 
 ## Feature List
 
