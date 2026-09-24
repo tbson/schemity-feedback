@@ -1,6 +1,6 @@
 # Schemity Feedback and Community
 
-Welcome to the official community feedback repository for [Schemity](https://schemity.com) - the **offline desktop ERD tool for software engineers**. This is the best place to report bugs, request new features, and provide feedback to help us improve the application.
+Welcome to the official community feedback repository for [Schemity](https://schemity.com) - the **database design software for software engineers**. This is the best place to report bugs, request new features, and provide feedback to help us improve the application.
 
 ## How to Contribute
 
@@ -20,7 +20,7 @@ Also in this repository:
 
 ## What is Schemity?
 
-**Schemity** is an offline ERD tool for software engineers who work with relational databases. Design your data model visually, create relationships by drag and drop, reverse engineer a live database into a diagram, and generate SQL migrations for review - in a lightweight native desktop app that works fully offline. Your diagrams are plain JSON files on your own machine, so this is a Git-native ERD tool by design: commit the ERD next to your code and review schema changes in pull requests.
+**Schemity** is database design software for software engineers that turns your live database into a local architecture map. Understand your schema, see the impact of every change, and design the next one: connect a database and Schemity draws every table, inferring the foreign keys it never declared; give your AI agent the same schema through a local MCP server; and review every schema change, yours or your agent's, with lint, dependency impact, and the exact migration SQL before anything is applied. Diagrams are plain JSON files on your own machine, so they live in Git next to your code. No schema upload, no subscription.
 
 Supported databases: **PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQLite**. Runs on macOS, Windows, and Linux.
 
@@ -32,35 +32,31 @@ Supported databases: **PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQL
 
 ## What makes Schemity different?
 
-**Offline by architecture, not by feature flag.**
-No cloud, no account, no server component. A local ERD tool that works on a plane, behind a VPN, or fully air-gapped - which also makes it an ERD tool that IT departments approve without a security review, and a safe choice for NDA projects and client work.
+Most database design software is a drawing canvas that lives in a browser. Schemity is a desktop app wired to the database it describes, and everything below holds whether the hands on the diagram are yours or your AI agent's.
 
-**Context views: one schema, many perspectives.**
-Break a large schema into focused sub-diagrams - auth, billing, analytics - while the main diagram stays the single source of truth. Context views are read-only by design, an orange dot marks entities with relationships outside the view, and you can create as many views as the schema deserves. This is how a 300-table database becomes diagrams people actually read. Then zoom out further with the Context Map: every context becomes a single node with dependency arrows between them, so the architecture itself is a diagram too.
+**It reads your database, and keeps up with it.**
+Browser tools take your schema as text you paste in, so the diagram starts drifting the moment the next migration lands. Schemity opens a real connection, reverse engineers the schema, and re-syncs every time you open the diagram: entities keep the layout you gave them, dropped tables disappear, and new ones arrive ready to place. Foreign keys the database never declared are inferred from column names and drawn dashed.
 
-**Git-native, not cloud-locked.**
-Every diagram is a plain JSON file in a workspace folder you choose. Commit it, diff it, review it in pull requests, and let `git log` be your schema's history. No vendor between you and your own work.
+**Whatever your agent changes, you see it before it runs.**
+An agent can edit the diagram over MCP, or write a migration in your codebase the way your ORM does. Either way the change is drawn without running it - dropped tables in red, new ones in green, changed columns tinted - and impact analysis says what it does to real data: lost rows, failing statements, table rewrites, and dependent views. Nothing writes to the database until you click Migrate, and on a Production connection you type the database name first.
 
-**Migrations that respect production.**
-Change the ERD and Schemity generates the exact SQL migration diff for review - nothing runs against the connected database until you explicitly apply it. Impact analysis says what that migration costs before it runs: data loss, statements that fail on existing rows, table rewrites and locks, and the views, triggers, and functions that depend on what changes. Hand-written or ORM-generated migration files get the same check without executing any of it. Reverse engineer an existing database into an ERD, and re-sync keeps the diagram current as the schema evolves: existing entities keep their layout, dropped ones disappear, new ones appear ready to place.
+**Your agent gets Schemity, not your credentials.**
+Most database MCP servers hand the agent a connection string and run whatever SQL it writes. Schemity is the governed path instead: a local MCP server with no vendor cloud in the middle, every agent edit staged in History for you to review, and the schema going only where your agent already sends your code. It works with Claude Code, Claude Desktop, Cursor, Codex, OpenCode, or any MCP host.
 
-**Your AI agent, working from your real schema.**
-Schemity is an MCP server, so the agent you already use - Claude Code, Claude Desktop, Cursor, Codex, OpenCode - reads your schema, context views, and dependencies, checks what a pending change will cost, and stages diagram edits you review in History before saving. Nothing an agent does reaches the diagram file or the database until you approve it, and it can draw a change preview on the canvas so you see what it means rather than read about it.
+**From a legacy database to a domain map.**
+Break a large schema into context views - auth, billing, analytics - while the main diagram stays the single source of truth; turn legends into context views in one click. Then open the Context Map: each domain becomes a node, and each arrow counts the real foreign keys between them, so the architecture itself is a diagram too.
 
-**Built for how engineers actually work.**
-Keyboard-first editing down to Vim-style navigation, entity templates so every table starts from your conventions, auto junction tables for N:N relationships, convention-aware field placement, and copy/paste between diagrams. It feels like a code editor, not a drawing tool.
+**The diagram is a file you own.**
+Schemity writes plain JSON into a folder you choose, so a reorganization by your agent is [reviewed in a pull request](https://schemity.com/blog/erd-lives-in-your-git-repo/) as a diff, like any other change: versioned, branched, and revertible.
 
-**Constraints without the guesswork.**
-Check constraints, composite unique constraints, indexes, defaults, and not-null rules are part of the visual design - displayed as badges directly on the entities, not buried in migration files. Clear crow's foot notation describes the full meaning of every relationship.
+**You can only draw what a database would accept.**
+A foreign key targets the parent's primary key, cardinality follows that key's uniqueness, referential actions are set per relationship, and duplicate table names are refused - so a diagram that looks valid is valid. Schema lint then checks twenty-six classes of problem and marks them on the diagram itself.
 
-**Documentation that leaves the app.**
-The diagram also exports as a data dictionary rather than a picture: HTML for someone who will never install Schemity, Markdown to commit beside the code, an Excel workbook to filter and sort - every entity, column, constraint, and relationship, ending with a count of what is not documented yet. Field descriptions are diagram data, so writing one produces no migration and never touches the database.
+**One purchase, and no meter on your model.**
+No per-seat subscription and no cap on tables, diagrams, workspaces, or context views - [no reason to merge two entities to stay under a quota](https://schemity.com/blog/your-erd-tool-shouldnt-count-your-tables/).
 
-**A schema linter that reads facts, not verdicts.**
-Twenty-six classes of schema problem, checked entirely offline and reported on the diagram itself - a strip in the margin marking the entity and the field row concerned, not a list you have to translate back into the picture. Findings are grouped by what they actually cost you rather than scored on a severity scale, and per-diagram ignores and rule switches are saved in the file, so the conventions your team agreed on get reviewed in Git like the rest of the schema.
-
-**Lightweight. No Electron. No JVM.**
-Built with a native WebView and Rust. Fast to download, instant to launch - a lightweight ERD tool, not a database IDE.
+**Nothing for us to leak.**
+We store an auto-generated device ID and your country, for licensing and regional support, and nothing that identifies you. Payments go through LemonSqueezy, so a SOC 2 or ISO 27001 review finds almost nothing to review.
 
 ## Who is Schemity for?
 
@@ -79,6 +75,8 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - [Schemity vs ChartDB](https://schemity.com/blog/schemity-vs-chartdb) - the offline desktop alternative to the cloud schema visualizer
 - [Schemity vs dbdiagram.io](https://schemity.com/blog/schemity-vs-dbdiagram-io) - visual canvas and offline files instead of a DSL in the browser
 - [Schemity vs DbSchema](https://schemity.com/blog/schemity-vs-dbschema) - the lightweight alternative to a 100+ engine database IDE
+- [DrawSQL alternative](https://schemity.com/blog/drawsql-alternative/)
+- [Lucidchart ERD alternative](https://schemity.com/blog/lucidchart-erd-alternative/)
 
 ## Feature List
 
