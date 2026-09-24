@@ -42,10 +42,10 @@ Break a large schema into focused sub-diagrams - auth, billing, analytics - whil
 Every diagram is a plain JSON file in a workspace folder you choose. Commit it, diff it, review it in pull requests, and let `git log` be your schema's history. No vendor between you and your own work.
 
 **Migrations that respect production.**
-Change the ERD and Schemity generates the exact SQL migration diff for review - nothing runs against the connected database until you explicitly apply it. Reverse engineer an existing database into an ERD, and re-sync keeps the diagram current as the schema evolves: existing entities keep their layout, dropped ones disappear, new ones appear ready to place.
+Change the ERD and Schemity generates the exact SQL migration diff for review - nothing runs against the connected database until you explicitly apply it. Impact analysis says what that migration costs before it runs: data loss, statements that fail on existing rows, table rewrites and locks, and the views, triggers, and functions that depend on what changes. Hand-written or ORM-generated migration files get the same check without executing any of it. Reverse engineer an existing database into an ERD, and re-sync keeps the diagram current as the schema evolves: existing entities keep their layout, dropped ones disappear, new ones appear ready to place.
 
-**AI on your own key - or no cloud at all.**
-A built-in AI chat with bring-your-own-key (BYOK) support for OpenAI, Claude, Gemini, Grok, and DeepSeek: describe a subsystem and it creates entities and relationships on the canvas. Prompts go directly from your desktop to your chosen provider - no middleman server. Where no cloud is allowed, add Ollama and run the same chat against local models with zero egress.
+**Your AI agent, working from your real schema.**
+Schemity is an MCP server, so the agent you already use - Claude Code, Claude Desktop, Cursor, Codex, OpenCode - reads your schema, context views, and dependencies, checks what a pending change will cost, and stages diagram edits you review in History before saving. Nothing an agent does reaches the diagram file or the database until you approve it, and it can draw a change preview on the canvas so you see what it means rather than read about it.
 
 **Built for how engineers actually work.**
 Keyboard-first editing down to Vim-style navigation, entity templates so every table starts from your conventions, auto junction tables for N:N relationships, convention-aware field placement, and copy/paste between diagrams. It feels like a code editor, not a drawing tool.
@@ -57,7 +57,7 @@ Check constraints, composite unique constraints, indexes, defaults, and not-null
 The diagram also exports as a data dictionary rather than a picture: HTML for someone who will never install Schemity, Markdown to commit beside the code, an Excel workbook to filter and sort - every entity, column, constraint, and relationship, ending with a count of what is not documented yet. Field descriptions are diagram data, so writing one produces no migration and never touches the database.
 
 **A schema linter that reads facts, not verdicts.**
-Seventeen classes of schema problem, checked entirely offline and reported on the diagram itself - a strip in the margin marking the entity and the field row concerned, not a list you have to translate back into the picture. Findings are grouped by what they actually cost you rather than scored on a severity scale, and per-diagram ignores and rule switches are saved in the file, so the conventions your team agreed on get reviewed in Git like the rest of the schema.
+Twenty-six classes of schema problem, checked entirely offline and reported on the diagram itself - a strip in the margin marking the entity and the field row concerned, not a list you have to translate back into the picture. Findings are grouped by what they actually cost you rather than scored on a severity scale, and per-diagram ignores and rule switches are saved in the file, so the conventions your team agreed on get reviewed in Git like the rest of the schema.
 
 **Lightweight. No Electron. No JVM.**
 Built with a native WebView and Rust. Fast to download, instant to launch - a lightweight ERD tool, not a database IDE.
@@ -88,6 +88,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Import an existing workspace from anywhere on your machine; open the workspace folder in the native file manager with one click
 - Workspaces are marked in the list for what they are: a Git branch icon when the folder sits inside a Git repository (at any depth), and its own icon when the workspace was imported from outside the default `~/schemity` folder - the two markers are independent and stack
 - Open diagrams in read-only mode - explore a diagram created from a connection without access to that connection
+- Move a diagram to another workspace from its right-click menu; a name clash arrives as "Name (2)" rather than overwriting anything
 - Diagrams move between the desktop app and Schemity Lite as JSON: export a diagram exactly as it is saved, and import one from the diagram list without overwriting anything - the import picks a free id and carries the suffix into the name. A password never travels in the file
 
 ### Database Connections
@@ -99,6 +100,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Or store no password at all: a credential source toggle runs a shell command through your login shell on connect and uses its output as the password, which is how one mechanism covers AWS RDS IAM tokens, Vault dynamic secrets, and a password manager. Nothing is persisted - the resolved credential lives in memory for five minutes - and a Test command button proves it before you save, reporting only how many characters came back
 - Connection setup hides behind a "Connect to a database" link, so a design-only diagram is name, database type, naming, save - with a visible undo that keeps anything already typed
 - Environment tags (Local, Stag, Prod) keep the connection list easy to scan; the badge appears on a diagram only when there is a connection behind it
+- A protected connection requires typing the database name before a migration can be applied - per connection, on by default for Production - and the migration dialog always shows its target host, database, schema, and environment
 
 ### Reverse Engineering & Re-sync
 - Design from scratch, or connect to a real database and reverse engineer its schema into an ERD
@@ -114,7 +116,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - The interface is available in English, Japanese, and Simplified Chinese, picked from a globe dropdown beside the theme toggle; switching applies instantly with no reload, and the diagram, the pan position, and every open tab survive it. Generated SQL, DDL, migrations, and the exported data dictionary stay English on purpose, so two people exporting the same schema in different languages still produce the same file to diff
 - F10 folds the toolbar and footer away and hands the whole window to the canvas, for screen recording, presenting, or simply a short laptop screen; F9 squares the window off to 16:9
 - The canvas cursor names the gesture it is about to perform - each resize handle carries its own direction, the new-relation anchor is a crosshair, a field row is a grab - and stays locked for the length of the gesture
-- Entity and legend colors are suggested from a palette that carries each hue as far as sRGB allows rather than holding every hue down to the dullest one, with lightness fixed per tier so header text flips between black and white on the same line, on the canvas and in the SVG export alike
+- Entities and legends with no color of their own render in slate and mauve, so a legend and the entities inside it never merge into one hue; colors are suggested from a palette that carries each hue as far as sRGB allows rather than holding every hue down to the dullest one, with lightness fixed per tier so header text flips between black and white on the same line, on the canvas and in the SVG export alike
 - Legends group related entities visually - drag, resize, rename, recolor; lock a legend to move its entities with it; right-click a legend to export the SQL of everything inside it
 - Two predefined layouts (alphabetical or relationship-based) plus Reset Layout
 - Realtime fuzzy search across entity, field, and legend names - type any fragment and jump straight to the match, with each result prefixed by what it is and ordered by match quality
@@ -125,7 +127,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Legends and entities support markdown descriptions - a small triangle in the top-right corner opens the rendered description in a modal; context views carry their own, opened from the context view list
 - Export diagrams and context views as JPG, PNG, or SVG, export the full SQL, or export a Mermaid erDiagram that renders natively on GitHub, GitLab, Notion, and Obsidian
 - A shared diagram opens in the theme its author published it in, applied as a preview so it never rewrites the visitor's own preference; an embed can drop its footer link with `?hidelink=1` while keeping the minimap and theme toggles
-- Get SQL reads whatever is selected, from the right-click menu, the keyboard shortcut, or the command palette alike, so the SQL of an arbitrary group of tables is one gesture rather than a table at a time
+- Get SQL and Get DBML read whatever is selected, from the right-click menu, the keyboard shortcut, or the command palette alike, so the SQL or DBML of an arbitrary group of tables is one gesture rather than a table at a time
 - SVG exports are true vector documents, not a screenshot wearing an .svg extension: shapes are real shapes grouped per entity and names stay live text, so a diagram opens as editable artwork in Figma, Affinity Designer, Illustrator, or Inkscape
 - Export a data dictionary instead of a picture: HTML to print or hand to someone who will never open Schemity, Markdown to commit beside the code, or a six-sheet Excel workbook to filter and sort - every entity and column with its type, key, nullability, default, and description, the unique, check, and index constraints, the relationships with their cardinality and delete rules, and the notes held in legends and context views. Database views are included and labelled, and the export follows the active view, so exporting from a context view documents that context alone
 - The data dictionary ends with its own coverage report - how many entities and fields carry a description and the names of those that do not - counting only what you can actually document, so a read-only view's columns are never listed as missing anything
@@ -134,10 +136,13 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Focused sub-diagrams of the main ERD: import just the entities for one subject area and arrange them freely
 - Read-only by design - the main view stays the single source of truth
 - An orange dot marks entities with relationships outside the view, so a focused diagram never hides that it is incomplete
+- The boundary indicator on an entity opens a list of everything crossing the view's edge - the keys pointing out and the entities outside referencing it, with each relation's description - and picking a row lands on that entity in the main diagram
+- Every context view carries a Main diagram button, and the window title names the view you are in
+- Sync from legends gives every legend a context view holding exactly its tables, in one click
 - Right-click a legend and choose "Import to context views" - the confirm leads with creating a context view named after that legend and coloured like it, so a legend drawn around a domain becomes a context view in one step; existing context views can be ticked in the same pass
 
 ### Context Map
-- A bird's-eye view that renders each context view as a single node, with arrows for the dependencies between contexts and a badge showing how many foreign keys flow in each direction
+- A bird's-eye view that renders each context view as a single node, with arrows for the dependencies between contexts and a badge showing how many foreign keys flow in each direction; it arranges itself by those dependencies the first time you open it
 - Arrow shape encodes dependency health: a straight arrow is a one-way dependency, a curved arrow means two contexts depend on each other - circular dependencies stand out at a glance
 - Click a context to highlight all of its dependency arrows; double-click an arrow to see every underlying foreign key behind it
 - Each context's color carries over to its node and outgoing arrows, and fuzzy search focuses any context instantly, even on a busy map
@@ -151,7 +156,8 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Convention-aware placement: new fields land above timestamp fields, and a new foreign key lands below the whole key block - under the primary key, any composite primary-foreign keys, and any existing foreign keys - matching the order entities are already laid out in
 - Entity templates pre-populate every new table with the fields your team always adds
 - Fields carry descriptions of their own, marked by a bar on the leading edge of the row - drawn in SVG exports too - so which columns are documented is a glance rather than an audit; a description is diagram data, never a schema change, so documenting a column produces no migration
-- Array type support for PostgreSQL; smart default values picked from special values or check constraints
+- Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`
+- Array type support for PostgreSQL; smart default values picked from special values or check constraints; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
 
 ### Relationships & Foreign Keys
 - Create foreign keys by dragging a field to another entity - 1:N, 1:1, and N:N with auto-generated junction tables; self-referencing keys supported
@@ -160,27 +166,34 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Entity colors carry to relationship lines; click a relationship to highlight it together with both connected fields
 - Selecting an entity draws every relation touching it at double weight, both ends counted, so its wiring is traceable across a dense diagram at a glance
 - The selected relation changes in kind rather than degree - drawn as dots in a fixed contrast color, black on light and white on dark - so it stays findable inside a bundle of parallel lines; the crow's feet and cardinality bars stay solid, and SVG exports are untouched
-- Custom waypoints with rounded corners, line hops where lines cross, and double-click gestures to reshape or reset a line
+- Virtual relations document a dependency the database does not declare, using the columns that already carry it: drawn with their own dash, never written to a migration or DBML, and kept through every refresh, rename, and paste
+- Undeclared foreign keys are inferred from column naming on connect, refresh, open, and import, arriving as virtual relations that say where they came from; one you delete stays deleted
+- Relations carry their own description, drawn along the line and in SVG export; double-click a relation to open its dialog
+- Custom waypoints with rounded corners, line hops where lines cross, and double-click gestures to reshape or reset a line; Route Relations runs lines around the tables so they cross less and share corridors as parallel lanes
 - Foreign key naming convention (snake_case or camelCase) configurable per connection - applied to the names Schemity writes itself, the foreign key field added when a relation is drawn and the composite keys of a junction table, never to the names you type
 
 ### Migrations
 - Change the ERD and Schemity generates the SQL migration diff for review; it runs against the connected database only when you explicitly apply it
 - Dashed borders distinguish draft entities that do not exist in the database yet
+- Impact analysis (F7) checks the pending migration for data loss, statements that can fail on existing rows, table rewrites and locks, and dependent views, triggers, and functions - saying what the database does to each - and shows how far the change spreads through foreign keys and context views; row counts are catalog estimates unless you ask for an exact, read-only count
+- Analyze a migration file - pasted or opened, hand-written or generated by Prisma, Alembic, or Flyway - against the connected database without executing any of it
+- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys and a findings drawer describing the plan in words
 - Exported SQL creates tables with their constraints inline - primary keys, unique and check constraints, and foreign keys inside CREATE TABLE, emitted in dependency order, with ALTER statements only where a deferred foreign key needs one
 
 ### Schema Lint
-- Seventeen classes of schema problem, checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
+- Twenty-six classes of schema problem, checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
 - Findings are grouped by consequence - fails at runtime, constraint unenforced, permanent cost, convention worth confirming - rather than graded on a severity scale, and each one jumps to its entity on the canvas or opens the dialog that resolves it
 - It knows a correct link table from a broken one: a composite primary key over the foreign key pair and a surrogate id plus a unique constraint on that pair are both accepted, while a multi-column unique containing a nullable column - which enforces nothing, because NULLs compare as distinct - is caught
 - A live count badge on the Lint button, colored by the most serious finding, works whether or not the mode is open
 - Per-finding ignores and per-rule switches are saved in the diagram file, so the conventions your team agreed on travel with the schema and get reviewed in Git
+- The Lint Rules tab explains every rule, searches and sorts them by finding count, and a Copy link on each finding hands it to an AI model in one click
 
-### AI Assistant
-- Built-in AI chat with BYOK support: OpenAI, Claude, Gemini, Grok, DeepSeek - requests go directly from your desktop to your provider
-- Ollama support for local models: the same diagram-editing chat with zero network egress
-- The chat interacts with the diagram itself - it creates and modifies entities and relationships, with full undo
-- Generated relations say what happens to a child row: the model picks ON DELETE and ON UPDATE per relation and names the delete rule in its explanation, so the choice is readable before a migration is applied rather than after; an action it invents is rejected rather than written into DDL the database will refuse
-- It works with the Context Map too: ask it to re-arrange the contexts, or to analyze the map for circular dependencies - including indirect cycles spanning several contexts that no visual scan can reveal
+### AI Agents (MCP)
+- Schemity is an MCP server, with setup snippets in the MCP drawer for Claude Code, Claude Desktop, Cursor, Codex, OpenCode, and MCP Inspector; `schemity --mcp` runs over stdio and can launch the app itself
+- An agent reads your schema, context views, and dependencies - including indirect cycles spanning several contexts - lints it, and analyzes the impact of pending changes or a migration file
+- It edits what a person edits - entities, columns, keys, constraints, indexes, relations, legends, and context views - as unsaved changes you review in History (F6) and save yourself; nothing it does writes the diagram file or the database
+- It can group entities into legends, route relations, and draw a change preview on the canvas so you see what a change means
+- Every undo step an agent makes names the agent that made it
 
 ### Keyboard & Productivity
 - Shortcuts for nearly every action; Vim-style navigation (h/j/k/l) across entities and fields
@@ -188,13 +201,14 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Copy/paste entities and fields between diagrams - pasting onto an existing entity transfers layout and color only, so arrangements move between diagrams safely
 - A copy stays on the clipboard rather than being consumed by the first paste, and repeated pastes cascade, so putting one entity down three times is one copy and three pastes
 - Shift is the multi-select modifier on every platform - Shift+click to add an entity, Shift+drag to box-select - with the platform's own toggle key kept as an alias
-- Move entities by keyboard in 1 px or 10 px steps
+- Move entities by keyboard in 1 px or 20 px steps
+- History (F6) describes every undo step and when it was made
 
 ## Pricing
 
 **$129 one-time** - a one-time purchase ERD tool, not a subscription. Includes 1 year of updates; $69/year to keep receiving updates after that. Your licence never expires and security patches stay free, so the app keeps working forever even if you never renew.
 
-**Free for education** (email support@schemity.com with your .edu address) and a **2-week full trial** for everyone, no credit card. After the trial, offline design keeps working and nothing on your disk is locked away - what pauses is the live-database half and the features built on it, including context views, the minimap, and schema lint, until a licence unlocks them again. Existing workspaces stay usable; only creating a new one is gated. Details on the [pricing page](https://schemity.com/pricing).
+**Free for education** (email support@schemity.com with your .edu address) and a **2-week full trial** for everyone, no credit card. After the trial, offline design keeps working and nothing on your disk is locked away - what pauses is the live-database half and the features built on it, including context views, the minimap, schema lint, impact analysis, and the MCP server, until a licence unlocks them again. Existing workspaces stay usable; only creating a new one is gated. Details on the [pricing page](https://schemity.com/pricing).
 
 ---
 

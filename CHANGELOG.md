@@ -2,6 +2,67 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.11.1 - 2026-09-22
+- ✨ Change preview: a read-only picture of a migration or a set of tables, marking dropped, added, altered, and renamed tables and columns, with the affected foreign keys shown and relations coloured by the table they leave or arrive with. A change to one table is drawn as a grid around that table, and a preview covering most of the diagram keeps the diagram's own layout. A findings drawer lists the planned changes in words alongside their lint and impact findings, and key, constraint, and index changes are named too.
+- ✨ Preview your own pending changes from the SQL migration drawer (Shift+F7) - including the unsaved edits of a diagram with no database, or a pasted or opened migration file. Inside a preview, search covers only its tables and Save, History, and undo are blocked; Close or Escape leaves it, and the picture exports as PNG or JPEG from the toolbar or with Cmd+E.
+- ✨ An agent can do over MCP what a person does in the diagram: composite unique constraints, indexes, dropping a constraint or index, editing a relation in place, primary keys on any columns, composite and virtual foreign keys, context views, and renaming, describing, or deleting a legend. It edits columns in place following the connection's naming convention and the selected template, and every request Schemity refuses says what to do instead.
+- ✨ `schemity --mcp` is a live MCP server over stdio: `open_schemity` lets an agent launch the app, `list_diagrams` marks the active tab, and `show_preview` lets an agent draw a change preview on the canvas. `get_schema` now shows constraints, indexes, descriptions, generated columns, the naming convention, and the active template, and `analyze_impact` returns the migration SQL on request. The MCP drawer gains setup snippets for Codex and OpenCode.
+- ✨ Nine more lint rules, twenty-six in all: an unindexed foreign key, SET NULL on a NOT NULL column, a key referencing non-unique columns, a cascade into a blocking key, names longer than the database keeps, cascades three or more levels deep, the same reference held twice with nothing keeping the two in agreement, keys told apart only by a number, and a composite-key link table spanning context views - the first rule to read how tables are grouped.
+- ✨ The Lint Rules tab explains what each rule reports, lists them alphabetically with search, shows and sorts by each rule's finding count, and says how many rules are on. A Copy link on each finding puts its rule, target, and text on the clipboard, ready to hand to an AI model.
+- ✨ Generated columns (GENERATED ALWAYS AS, and SQL Server computed columns) are read on every database, drawn as `= expression` on the canvas and in SVG export, and can be renamed and described.
+- ✨ Impact analysis says what the database does to each dependent object - refuses the change, updates it to match, drops it with the table, or lets it fail on its next run - and flags a new unique index that can fail on duplicates, statements that block reads or writes while scanning a large table, the disk size of a table dropped, rewritten, or locked, and a column a generated column reads, which every database refuses to drop.
+- ✨ Move a diagram to another workspace from its right-click menu; a name clash arrives as "Name (2)" rather than being refused or overwriting anything.
+- 🔧 Schemity remembers the window's size and position between launches, and a welcome dialog greets the first launch.
+- 🔧 Layouts an agent asks for pack grouped tables beside the tables they relate to and route relations in a second pass, for fewer crossings and bends; `check_relation_lines` reports bends as well as crossings.
+- 🔧 Straighten relation sits in the relation menu of every view, including read-only connections, context views, and the change preview.
+- 🔧 A default that is one of the field's CHECK or enum values is drawn bare and underlined whichever spelling was stored, on the canvas and in SVG export.
+- 🐛 A diagram whose file cannot be read is never overwritten, orphaned, or replaced by an empty canvas on the next save.
+- 🐛 A renamed column keeps its unique constraint on MySQL and SQL Server, and a crafted default, type name, or index method can no longer add statements to a generated migration.
+- 🐛 Rebuilding a SQLite table keeps its generated columns, and a foreign key no longer copies its parent's serial type.
+- 🐛 A name with a double quote exports cleanly to Mermaid and DBML.
+- 🐛 A relation drawn after a context view was made is routed inside the view, and removing a waypoint next to a relation's end reattaches that end facing its new neighbour instead of sliding to the table's corner.
+- 🐛 Overlapping undo pauses no longer cancel each other, and a write that changed nothing records no undo step.
+- 🐛 Backspace over the Context Map no longer sends the window back to the diagram list.
+
+## v2.11.0 - 2026-09-16
+- ✨ Schemity is an MCP server: an AI agent such as Claude Code, Claude Desktop, or Cursor can read your schema, context views, dependencies - including indirect cycles spanning several contexts - and the cost of pending changes, and stage diagram edits you review before saving. Nothing an agent does writes the diagram file or the database. Agents can also group entities into legends, route relations, check which relation lines overlap or cross, and count rows on request. The MCP drawer shows server status, the bearer token, a connection test, and ready-made setup snippets.
+- ✨ Impact analysis checks a connected diagram's pending migration for data loss, statements that can fail on existing rows, table rewrites, and dependent views, triggers, and functions, and shows how far a change spreads through foreign keys and the context views the reached tables sit in. F7 or the Impact button opens the drawer, and the same findings appear above the SQL in the migration dialog. Row counts are catalog estimates; "Count exactly" runs a read-only count only when you ask.
+- ✨ Analyze a migration file - pasted or opened as .sql, hand-written or generated by Prisma, Alembic, or Flyway - against the connected database without executing any of it. The report adds a "Changes data" group for UPDATE, DELETE, and INSERT, skips framework bookkeeping tables, and lists anything it cannot classify under "Not analysed".
+- ✨ A protected connection requires typing the database name before Apply is enabled. The option is per connection and on by default for Production, and the migration dialog now shows its target - host, database, schema, and environment - while a connected diagram's footer shows host : database.
+- ✨ History (F6) is a drawer describing every undo step and when it was made; a step made by an agent names the agent that made it.
+- ✨ Route Relations in the layout menu runs lines around the tables, so they cross each other less and share corridors as parallel lanes.
+- ✨ Sync from legends in the Context Views drawer gives every legend a context view holding exactly its tables, in one click.
+- 🔧 The in-app AI chat is replaced by the MCP server - bring the agent you already use rather than a provider key - and the old provider keys are removed from the keychain on first launch.
+- 🔧 The Context Map arranges itself by its dependencies the first time you open it, rather than in name order.
+- 🔧 The Import SQL editor and the migration file editor highlight SQL syntax.
+- 🔧 Editing a connection from the diagram list updates its open tabs at once: name, target, and undo history.
+- 🔧 MySQL columns show only the precision MySQL declares: INTEGER(10,0) reads as INTEGER, TINYINT(3,0) as TINYINT, and a bare FLOAT(12) as FLOAT.
+- 🐛 A SQL Server column renamed and retyped in one save migrates with a single ALTER COLUMN.
+
+## v2.10.3 - 2026-09-13
+- ✨ The boundary indicator on an entity in a context view opens a list of everything crossing that boundary - the keys it owns pointing out and the entities outside referencing it, each with its relation description - and picking a row lands on the main diagram with that entity selected.
+- ✨ Every context view canvas carries a Main diagram button, the Context Map's exit says where it goes, and a separate button returns to the context view you came from. The window title names the view you are in, as `ERD: workspace.diagram.view`.
+- ✨ Numeric precision and scale are drawn on the entity, so a NUMERIC(4,1) column reads as NUMERIC(4,1) rather than plain NUMERIC.
+- ✨ Cmd+Enter, or Ctrl+Enter elsewhere, in the field drawer does what Continue does: save, reset, and move on to the next field.
+- 🔧 Entities and legends with no color of their own render in slate and mauve rather than plain grey, so a legend and the entities inside it never merge into one hue.
+- 🔧 A live PostgreSQL connection offers SQL type names rather than internal catalogue ones - SMALLINT and BOOLEAN instead of INT2 and BOOL - so a field created from one passes the integer checks.
+- 🔧 Schemity asks before running a connection's password command for the first time.
+- 🐛 Migration SQL that could fail or drop data is fixed across dialects, including primary key and foreign key reordering, unique indexes, CHECK constraint names, string literal escaping, and the MySQL foreign key checks after a failed migration.
+- 🐛 Non-ASCII table names and foreign keys survive MySQL and SQL Server imports, and non-ASCII CHECK constraints no longer crash the import.
+- 🐛 An unreadable workspace file is never overwritten, a late-loading diagram no longer overwrites another tab, and a diagram that fails to load in the background leaves you on your own tab.
+- 🐛 The SSH tunnel keeps accepting after an error and reports a rejected host key, and IPv6 hosts and special characters in database names work in connection URLs.
+- 🐛 Diagram and workspace listing failures, and failed saves, are reported instead of showing an empty list or passing silently.
+
+## v2.10.2 - 2026-09-06
+- ✨ A virtual relation documents a dependency the database does not declare: pick the columns that already carry it rather than adding one. It has no referential actions or N:N, derives its cardinality from unique constraints, draws with its own dash on the canvas and in SVG export, and never reaches a migration or the DBML export. It survives every rewrite - refresh, rename, paste, and duplicate - and deleting one leaves its columns alone.
+- ✨ Undeclared foreign keys are inferred from column naming: names are tokenized, a trailing id dropped, and progressively shorter runs matched against entity names and their singular forms. An inferred relation is a virtual relation carrying its provenance; the scan runs on connect, refresh, open, and import, raises one notification with a count and a Remove all action, and one you delete stays deleted.
+- ✨ Relations carry a description of their own, written in the relation dialog and drawn along the line; it follows the route as the line or either entity moves, and SVG export draws it too. Double-click a relation to open its dialog.
+- ✨ Get DBML sits beside Get SQL on the entity, multi-selection, and legend menus (Cmd/Ctrl+Shift+G) and opens a click-to-copy preview; a subset export drops any Ref whose other end is not included.
+- 🔧 The relation dialog opens in the mode you last used in that diagram, relation or virtual, kept as a local preference per diagram.
+- 🔧 Every surface describing a relation says when the database does not declare it: the cardinality dialog hides ON DELETE and ON UPDATE, and the Context Map drawer tags virtual rows - an inferred one says it was read from column names. Schema lint counts virtual keys for junction detection but drops the claim that the database rejects them.
+- 🔧 The desktop app is about a quarter smaller: DBML parsing moves to a much lighter parser, and the browser engine is no longer embedded in the desktop binary.
+- 🐛 A dialog never scrolls sideways, and the move cursor is released by the same mouseup that ends a drag.
+
 ## v2.10.1 - 2026-09-02
 - ✨ Selecting an entity draws every relation touching it at double weight, so its wiring is traceable across a dense diagram at a glance. Both ends count rather than only the end that owns the foreign key, and weight is used rather than a highlight colour, because entity colours are the designer's and any fixed hue eventually collides with one. The connected line keeps its own colour and stays solid, so solid against dotted is what separates it from the selected relation, and an ON DELETE CASCADE end stays one step heavier still. The emphasis is canvas state and reaches neither the SVG nor the image export.
 - ✨ The new-relation dialog opens on the ON DELETE and ON UPDATE actions you picked last, so a schema that cascades most of the time stops re-picking CASCADE on every dialog. The memory is kept separately per relation type, so a 1:N habit cannot quietly redefine what 1:1 or N:N start with. It is a local preference rather than diagram data - nothing here travels with an export - and a remembered value is used only when the current dialect implements it, so a RESTRICT remembered from PostgreSQL falls back to the default on SQL Server. The AI is deliberately left out, since it chooses each relation's actions from what the child row means rather than from a habit.

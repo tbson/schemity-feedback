@@ -4,20 +4,18 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
-- **Japanese and Simplified Chinese** (v2.10.0) - the whole interface, plus AI chat replies and per-language legal pages, picked from a globe dropdown and applied instantly with no reload; generated SQL, migrations, and the data dictionary stay English on purpose, so the same schema exports to the same file in every language
-- **Database passwords from a shell command** (v2.10.0) - a credential source toggle runs your own helper on connect and uses its output as the password, which covers AWS RDS IAM tokens, Vault dynamic secrets, and password managers without vendor-specific code; nothing is persisted, and a Test command button proves it before you save
-- **Large-diagram panning performance** (v2.10.0) - panning now costs what is on screen rather than what is in the schema: off-screen shapes are culled, the picking buffer is skipped mid-gesture, and a pan frame on a 150-entity diagram went from 7.3ms to about 1.0ms
-- **Presentation mode** (v2.9.7) - F10 folds the toolbar and footer away and hands the whole window to the canvas, and F9 squares the window off to 16:9, for screen recording, demos, and short laptop screens
-- **Diagram interchange as JSON** (v2.9.6) - export a diagram exactly as it is saved and import it back from the diagram list, so diagrams move between the desktop app and Schemity Lite; an import never overwrites, and a password never travels in the file
-- **Typed search** (v2.9.6) - `[e`, `[f`, or `[l` scopes a query to entities, fields, or legends, and fields match on their type as well as their name, so `[feric` reaches every NUMERIC column in the diagram
-- **Data dictionary export** (v2.9.3) - the diagram as a document rather than a picture, in HTML, Markdown, and a six-sheet Excel workbook, covering every entity, column, constraint, and relationship, database views included, and closing with a count of what is not documented yet
-- **Field descriptions** (v2.9.3) - columns carry descriptions marked on the row itself, read in from database comments on import and never written back, so documenting a column produces no migration
-- **Connection strings and TLS verification** (v2.9.3) - paste a PostgreSQL, MySQL, or SQL Server connection string and the dialog fills itself in; verify-ca and verify-full check the server certificate against a chain, with custom root CA and client certificate files
-- **Schema lint** (v2.9.2) - seventeen classes of schema problem checked offline and marked on the diagram itself, grouped by consequence rather than severity, with per-diagram ignores and rule switches saved in the file
+- **MCP server for AI agents** (v2.11.0, v2.11.1) - replaces the in-app AI chat: the agent you already use reads your schema, analyzes pending changes, and stages diagram edits you review in History before saving, with setup snippets for Claude Code, Claude Desktop, Cursor, Codex, and OpenCode
+- **Change preview** (v2.11.1) - a read-only picture of a migration or your own pending edits, marking dropped, added, altered, and renamed tables and columns with the foreign keys they affect; an agent can draw one on the canvas too
+- **Impact analysis** (v2.11.0) - a pending migration, or a hand-written or ORM-generated migration file, checked against the connected database for data loss, failing statements, rewrites, locks, and dependent objects before anything runs
+- **Nine more lint rules** (v2.11.1) - twenty-six in all, including the first architecture rule reading context views, plus a Lint Rules tab that explains, searches, and sorts every rule
+- **Virtual and inferred relations** (v2.10.2) - document the dependencies a database never declares, drawn with their own dash and kept out of migrations, and have them inferred from column naming on import and refresh
+- **Generated columns** (v2.11.1) - GENERATED ALWAYS AS and SQL Server computed columns read on every database and drawn as `= expression`
+- **Japanese and Simplified Chinese** (v2.10.0) - the whole interface, picked from a globe dropdown and applied instantly with no reload; generated SQL, migrations, and the data dictionary stay English on purpose, so the same schema exports to the same file in every language
+- **Database passwords from a shell command** (v2.10.0) - a credential source toggle runs your own helper on connect and uses its output as the password, which covers AWS RDS IAM tokens, Vault dynamic secrets, and password managers without vendor-specific code
 
 ## Building now
 
-- **More lint rules** - schema lint is incremental by design. Still open from the first pass: rules that need the live connection (counting duplicates before an ALTER, NOT NULL without a default on a populated table), architecture rules that read context views, and stable public rule ids to use as documentation anchors
+- **More lint rules** - schema lint is incremental by design. Still open: rules that need the live connection (counting duplicates before an ALTER, NOT NULL without a default on a populated table), the remaining architecture rules that read context views, an auto-fix that turns a finding into a reviewed migration, and stable public rule ids to use as documentation anchors
 
 ## Considering
 
