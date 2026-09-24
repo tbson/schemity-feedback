@@ -75,8 +75,8 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - [Schemity vs ChartDB](https://schemity.com/blog/schemity-vs-chartdb) - the offline desktop alternative to the cloud schema visualizer
 - [Schemity vs dbdiagram.io](https://schemity.com/blog/schemity-vs-dbdiagram-io) - visual canvas and offline files instead of a DSL in the browser
 - [Schemity vs DbSchema](https://schemity.com/blog/schemity-vs-dbschema) - the lightweight alternative to a 100+ engine database IDE
-- [DrawSQL alternative](https://schemity.com/blog/drawsql-alternative/)
-- [Lucidchart ERD alternative](https://schemity.com/blog/lucidchart-erd-alternative/)
+- [Schemity vs DrawSQL](https://schemity.com/blog/drawsql-alternative/) - a live database connection and no table limits instead of a capped browser canvas
+- [Schemity vs Lucidchart](https://schemity.com/blog/lucidchart-erd-alternative/) - reverse engineer your database directly instead of hand-exporting a CSV
 
 ## Feature List
 
