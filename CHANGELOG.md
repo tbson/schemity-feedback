@@ -2,6 +2,32 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.12.0 - 2026-10-01
+- ✨ Refresh & merge - from the Reset ERD dropdown, Cmd+Shift+R, or the command palette - re-reads the database after an outside migration, such as an ORM's, and keeps positions, sizes, colours, legends, and relation routes, even when the foreign keys were renamed. The result is one unsaved change you review before saving.
+- ✨ Pointing a diagram at another database, or connecting a design to a database that already has tables, opens the merged diagram as an unsaved change, so closing without saving leaves the file as it was.
+- 🔧 A diagram's database type is fixed once the diagram is created.
+- 🔧 On the web version and expired trials, SVG, SQL, DBML, and Mermaid export and DBML import are paid features; PNG, JPEG, Schemity JSON, and Import SQL stay free.
+- 🔧 Impact analysis judges PostgreSQL NUMERIC precision and scale changes, ADD COLUMN with a volatile default or serial, NOT VALID constraints validated later, and SET NOT NULL on a column already proven NOT NULL. It follows column and table renames through later steps, no longer warns about a foreign key on a new column without a default, and offers Count exactly only where a count is possible.
+- 🔧 A generated column shows its whole expression, cut to the entity's width, on the canvas and in SVG export; its field form locks everything except name and description, and its expression survives the change preview and a baseline.
+- 🔧 The migration dialog numbers its SQL lines, a refused statement shows PostgreSQL's DETAIL line naming the object in the way, and a failed migration also raises a notification, so the error is seen even when the SQL is long.
+- 🔧 Relations between tables placed close together are drawn with one bend instead of looping around a table.
+- 🔧 The Diagram Manager keeps its headers and footers in view however long the lists get, and the minimap stays hidden while a view is empty.
+- 🐛 Rebuilding a SQLite table keeps its triggers - refusing the change when a trigger names a column or table the rebuild renames or drops - and keeps AUTOINCREMENT only when the table declared it. Changing a table that a view reads no longer fails with "no such table", new tables are created before the tables that reference them, and a trigger's BEGIN ... END body stays one statement.
+- 🐛 Making a nullable PostgreSQL column NOT NULL no longer emits a DROP DEFAULT for a default the column never had.
+- 🐛 The change preview lists a renamed column as altered too when its definition also changed.
+- 🐛 A template left open in one tab no longer crashes the canvas of the next.
+
+## v2.11.2 - 2026-09-25
+- 🔧 Schemity reopens the last used workspace instead of the top of the list.
+- 🔧 The change preview shows the planned migration SQL, numbered and wrapped so a narrow drawer shows each whole statement.
+- 🔧 Setting a relation to SET NULL makes its foreign key columns nullable, and a new SET NULL relation draws as optional.
+- 🔧 Impact analysis understands CREATE UNIQUE INDEX CONCURRENTLY and PostgreSQL's ADD CONSTRAINT ... USING INDEX.
+- 🔧 Agents get each column's full type from `get_schema` - VARCHAR(17), NUMERIC(12,2) - so a copied field comes back as the same column; they can add more than one expression check to a table, and legends they create without a colour each get a free swatch.
+- 🔧 Lint, `get_pending_changes`, and `show_preview` results stay within what an agent's client accepts on a large diagram, and grouping, routing, and previews get longer MCP timeouts; a timed-out write tells the agent it may still land.
+- 🔧 The macOS DMG is notarized, so the downloaded file passes Gatekeeper on its own.
+- 🐛 Constraint and index names stay within PostgreSQL's 63-byte limit, ending in a short hash, so the database keeps the name the diagram shows.
+- 🐛 A PostgreSQL value-list check on a varchar column is read with its column and values, so lint no longer calls the column unrestricted.
+
 ## v2.11.1 - 2026-09-22
 - ✨ Change preview: a read-only picture of a migration or a set of tables, marking dropped, added, altered, and renamed tables and columns, with the affected foreign keys shown and relations coloured by the table they leave or arrive with. A change to one table is drawn as a grid around that table, and a preview covering most of the diagram keeps the diagram's own layout. A findings drawer lists the planned changes in words alongside their lint and impact findings, and key, constraint, and index changes are named too.
 - ✨ Preview your own pending changes from the SQL migration drawer (Shift+F7) - including the unsaved edits of a diagram with no database, or a pasted or opened migration file. Inside a preview, search covers only its tables and Save, History, and undo are blocked; Close or Escape leaves it, and the picture exports as PNG or JPEG from the toolbar or with Cmd+E.

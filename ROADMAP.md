@@ -4,6 +4,7 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **Refresh & merge** (v2.12.0) - re-read the database after an outside migration, such as an ORM's, keeping your layout, colours, legends, and relation routes, as one unsaved change you review before saving
 - **MCP server for AI agents** (v2.11.0, v2.11.1) - replaces the in-app AI chat: the agent you already use reads your schema, analyzes pending changes, and stages diagram edits you review in History before saving, with setup snippets for Claude Code, Claude Desktop, Cursor, Codex, and OpenCode
 - **Change preview** (v2.11.1) - a read-only picture of a migration or your own pending edits, marking dropped, added, altered, and renamed tables and columns with the foreign keys they affect; an agent can draw one on the canvas too
 - **Impact analysis** (v2.11.0) - a pending migration, or a hand-written or ORM-generated migration file, checked against the connected database for data loss, failing statements, rewrites, locks, and dependent objects before anything runs
@@ -11,7 +12,6 @@ What we recently shipped, what we are building, and what we are considering. Thi
 - **Virtual and inferred relations** (v2.10.2) - document the dependencies a database never declares, drawn with their own dash and kept out of migrations, and have them inferred from column naming on import and refresh
 - **Generated columns** (v2.11.1) - GENERATED ALWAYS AS and SQL Server computed columns read on every database and drawn as `= expression`
 - **Japanese and Simplified Chinese** (v2.10.0) - the whole interface, picked from a globe dropdown and applied instantly with no reload; generated SQL, migrations, and the data dictionary stay English on purpose, so the same schema exports to the same file in every language
-- **Database passwords from a shell command** (v2.10.0) - a credential source toggle runs your own helper on connect and uses its output as the password, which covers AWS RDS IAM tokens, Vault dynamic secrets, and password managers without vendor-specific code
 
 ## Building now
 

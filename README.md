@@ -35,7 +35,7 @@ Supported databases: **PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQL
 Most database design software is a drawing canvas that lives in a browser. Schemity is a desktop app wired to the database it describes, and everything below holds whether the hands on the diagram are yours or your AI agent's.
 
 **It reads your database, and keeps up with it.**
-Browser tools take your schema as text you paste in, so the diagram starts drifting the moment the next migration lands. Schemity opens a real connection, reverse engineers the schema, and re-syncs every time you open the diagram: entities keep the layout you gave them, dropped tables disappear, and new ones arrive ready to place. Foreign keys the database never declared are inferred from column names and drawn dashed.
+Browser tools take your schema as text you paste in, so the diagram starts drifting the moment the next migration lands. Schemity opens a real connection, reverse engineers the schema, and re-syncs every time you open the diagram: entities keep the layout you gave them, dropped tables disappear, and new ones arrive ready to place. After an outside migration, such as your ORM's, Refresh & merge re-reads the database as one unsaved change you review before saving. Foreign keys the database never declared are inferred from column names and drawn dashed.
 
 **Whatever your agent changes, you see it before it runs.**
 An agent can edit the diagram over MCP, or write a migration in your codebase the way your ORM does. Either way the change is drawn without running it - dropped tables in red, new ones in green, changed columns tinted - and impact analysis says what it does to real data: lost rows, failing statements, table rewrites, and dependent views. Nothing writes to the database until you click Migrate, and on a Production connection you type the database name first.
@@ -85,6 +85,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Manage multiple database connections and diagrams per workspace; reorder by drag and drop
 - Import an existing workspace from anywhere on your machine; open the workspace folder in the native file manager with one click
 - Workspaces are marked in the list for what they are: a Git branch icon when the folder sits inside a Git repository (at any depth), and its own icon when the workspace was imported from outside the default `~/schemity` folder - the two markers are independent and stack
+- Schemity reopens the last used workspace instead of the top of the list
 - Open diagrams in read-only mode - explore a diagram created from a connection without access to that connection
 - Move a diagram to another workspace from its right-click menu; a name clash arrives as "Name (2)" rather than overwriting anything
 - Diagrams move between the desktop app and Schemity Lite as JSON: export a diagram exactly as it is saved, and import one from the diagram list without overwriting anything - the import picks a free id and carries the suffix into the name. A password never travels in the file
@@ -103,6 +104,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 ### Reverse Engineering & Re-sync
 - Design from scratch, or connect to a real database and reverse engineer its schema into an ERD
 - Re-sync keeps a reverse-engineered ERD current: reopening the diagram pulls the latest schema, existing entities keep their layout, and a Reset ERD action does the same on demand
+- Refresh & merge (Cmd+Shift+R) re-reads the database after an outside migration, such as an ORM's, keeping positions, sizes, colours, legends, and relation routes even when foreign keys were renamed - as one unsaved change; pointing a diagram at another database, or connecting a design to one that already has tables, merges the same way, and a diagram's database type is fixed once created
 - Import SQL (CREATE TABLE statements or a full dump) to generate entities and relationships automatically
 - Column comments already in the database are read in as field descriptions and never written back, so an existing schema arrives documented and no refresh overwrites your notes
 - Import and export DBML, so schemas move to and from dbdiagram.io and the wider DBML toolchain in one step
@@ -154,12 +156,12 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Convention-aware placement: new fields land above timestamp fields, and a new foreign key lands below the whole key block - under the primary key, any composite primary-foreign keys, and any existing foreign keys - matching the order entities are already laid out in
 - Entity templates pre-populate every new table with the fields your team always adds
 - Fields carry descriptions of their own, marked by a bar on the leading edge of the row - drawn in SVG exports too - so which columns are documented is a glance rather than an audit; a description is diagram data, never a schema change, so documenting a column produces no migration
-- Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`
+- Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`, the whole expression cut to the entity's width; their field form locks everything except name and description
 - Array type support for PostgreSQL; smart default values picked from special values or check constraints; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
 
 ### Relationships & Foreign Keys
 - Create foreign keys by dragging a field to another entity - 1:N, 1:1, and N:N with auto-generated junction tables; self-referencing keys supported
-- Clear crow's foot notation with configurable cardinality, ON DELETE, and ON UPDATE; an N:N opens at CASCADE on both, since a junction row has no meaning left once either parent is gone, and every dialog reopens on the actions you picked last, remembered separately per relation type
+- Clear crow's foot notation with configurable cardinality, ON DELETE, and ON UPDATE; an N:N opens at CASCADE on both, since a junction row has no meaning left once either parent is gone, and every dialog reopens on the actions you picked last, remembered separately per relation type; choosing SET NULL makes the foreign key columns nullable
 - Relationships with ON DELETE CASCADE are drawn with a bold crow's foot at the child end, so cascading deletes are visible on the canvas without opening any dialog
 - Entity colors carry to relationship lines; click a relationship to highlight it together with both connected fields
 - Selecting an entity draws every relation touching it at double weight, both ends counted, so its wiring is traceable across a dense diagram at a glance
@@ -173,9 +175,10 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 ### Migrations
 - Change the ERD and Schemity generates the SQL migration diff for review; it runs against the connected database only when you explicitly apply it
 - Dashed borders distinguish draft entities that do not exist in the database yet
-- Impact analysis (F7) checks the pending migration for data loss, statements that can fail on existing rows, table rewrites and locks, and dependent views, triggers, and functions - saying what the database does to each - and shows how far the change spreads through foreign keys and context views; row counts are catalog estimates unless you ask for an exact, read-only count
+- Impact analysis (F7) checks the pending migration for data loss, statements that can fail on existing rows, table rewrites and locks, and dependent views, triggers, and functions - saying what the database does to each - and shows how far the change spreads through foreign keys and context views; row counts are catalog estimates unless you ask for an exact, read-only count; renames are followed through later steps
 - Analyze a migration file - pasted or opened, hand-written or generated by Prisma, Alembic, or Flyway - against the connected database without executing any of it
-- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys and a findings drawer describing the plan in words
+- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys, a findings drawer describing the plan in words, and the planned migration SQL numbered and wrapped
+- The migration dialog numbers its SQL lines, a refused statement shows the database's DETAIL line naming the object in the way, and a failed migration also raises a notification
 - Exported SQL creates tables with their constraints inline - primary keys, unique and check constraints, and foreign keys inside CREATE TABLE, emitted in dependency order, with ALTER statements only where a deferred foreign key needs one
 
 ### Schema Lint
@@ -206,7 +209,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 **$129 one-time** - a one-time purchase ERD tool, not a subscription. Includes 1 year of updates; $69/year to keep receiving updates after that. Your licence never expires and security patches stay free, so the app keeps working forever even if you never renew.
 
-**Free for education** (email support@schemity.com with your .edu address) and a **2-week full trial** for everyone, no credit card. After the trial, offline design keeps working and nothing on your disk is locked away - what pauses is the live-database half and the features built on it, including context views, the minimap, schema lint, impact analysis, and the MCP server, until a licence unlocks them again. Existing workspaces stay usable; only creating a new one is gated. Details on the [pricing page](https://schemity.com/pricing).
+**Free for education** (email support@schemity.com with your .edu address) and a **2-week full trial** for everyone, no credit card. After the trial, offline design keeps working and nothing on your disk is locked away - what pauses is the live-database half and the features built on it, including context views, the minimap, schema lint, impact analysis, and the MCP server, along with SVG, SQL, DBML, and Mermaid export and DBML import, until a licence unlocks them again; PNG, JPEG, Schemity JSON, and Import SQL stay free. Existing workspaces stay usable; only creating a new one is gated. Details on the [pricing page](https://schemity.com/pricing).
 
 ---
 
