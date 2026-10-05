@@ -89,6 +89,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Open diagrams in read-only mode - explore a diagram created from a connection without access to that connection
 - Move a diagram to another workspace from its right-click menu; a name clash arrives as "Name (2)" rather than overwriting anything
 - Diagrams move between the desktop app and Schemity Lite as JSON: export a diagram exactly as it is saved, and import one from the diagram list without overwriting anything - the import picks a free id and carries the suffix into the name. A password never travels in the file
+- Anonymous usage statistics and crash reports switch off from Settings in the home footer, after which nothing is sent; even when on, events carry no page URLs or device details and crash reports hide workspace, connection, and database names
 
 ### Database Connections
 - PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQLite; multi-schema support on PostgreSQL
@@ -122,6 +123,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Realtime fuzzy search across entity, field, and legend names - type any fragment and jump straight to the match, with each result prefixed by what it is and ordered by match quality
 - Search can be scoped to one kind of thing by the same letter the results are labelled with: `[e`, `[f`, or `[l` before the query restricts it to entities, fields, or legends, with the closing bracket and the space optional
 - Fields also match on their type, using exactly the text the canvas shows - `VARCHAR(255)` on its length, `TEXT[]` on its array suffix, `[feric` on every NUMERIC column - so you can find the columns that share a shape rather than a name; names still rank above types
+- Large diagrams stay fast: only the tables on screen are drawn up front, a table with 30 or more relations drags with straight lines and routes them on drop, and the canvas scrolls to a diagram of any size
 - A toggleable minimap shows the whole diagram in miniature with a rectangle marking your viewport: click to jump, drag to pan. Each view carries its own, and entities not yet confirmed by the database are the one thing drawn in color
 - An empty canvas points at the way in - right-click and the create-entity shortcut on the main view, import on a context view - and the hint never appears in exports
 - Legends and entities support markdown descriptions - a small triangle in the top-right corner opens the rendered description in a modal; context views carry their own, opened from the context view list
@@ -157,10 +159,10 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Entity templates pre-populate every new table with the fields your team always adds
 - Fields carry descriptions of their own, marked by a bar on the leading edge of the row - drawn in SVG exports too - so which columns are documented is a glance rather than an audit; a description is diagram data, never a schema change, so documenting a column produces no migration
 - Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`, the whole expression cut to the entity's width; their field form locks everything except name and description
-- Array type support for PostgreSQL; smart default values picked from special values or check constraints; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
+- Array type support for PostgreSQL; smart default values picked from special values or check constraints, kept across a type change while still valid; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
 
 ### Relationships & Foreign Keys
-- Create foreign keys by dragging a field to another entity - 1:N, 1:1, and N:N with auto-generated junction tables; self-referencing keys supported
+- Create foreign keys by dragging a field to another entity, or release a new relation and pick its destination by name - 1:N, 1:1, and N:N with auto-generated junction tables; self-referencing keys supported
 - Clear crow's foot notation with configurable cardinality, ON DELETE, and ON UPDATE; an N:N opens at CASCADE on both, since a junction row has no meaning left once either parent is gone, and every dialog reopens on the actions you picked last, remembered separately per relation type; choosing SET NULL makes the foreign key columns nullable
 - Relationships with ON DELETE CASCADE are drawn with a bold crow's foot at the child end, so cascading deletes are visible on the canvas without opening any dialog
 - Entity colors carry to relationship lines; click a relationship to highlight it together with both connected fields
@@ -177,13 +179,13 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Dashed borders distinguish draft entities that do not exist in the database yet
 - Impact analysis (F7) checks the pending migration for data loss, statements that can fail on existing rows, table rewrites and locks, and dependent views, triggers, and functions - saying what the database does to each - and shows how far the change spreads through foreign keys and context views; row counts are catalog estimates unless you ask for an exact, read-only count; renames are followed through later steps
 - Analyze a migration file - pasted or opened, hand-written or generated by Prisma, Alembic, or Flyway - against the connected database without executing any of it
-- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys, a findings drawer describing the plan in words, and the planned migration SQL numbered and wrapped
+- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys, a findings drawer describing the plan in words, and the planned migration SQL numbered and wrapped, copied whole from its header
 - The migration dialog numbers its SQL lines, a refused statement shows the database's DETAIL line naming the object in the way, and a failed migration also raises a notification
 - Exported SQL creates tables with their constraints inline - primary keys, unique and check constraints, and foreign keys inside CREATE TABLE, emitted in dependency order, with ALTER statements only where a deferred foreign key needs one
 
 ### Schema Lint
 - Twenty-six classes of schema problem, checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
-- Findings are grouped by consequence - fails at runtime, constraint unenforced, permanent cost, convention worth confirming - rather than graded on a severity scale, and each one jumps to its entity on the canvas or opens the dialog that resolves it
+- Findings are grouped by consequence - fails at runtime, constraint unenforced, permanent cost, convention worth confirming - rather than graded on a severity scale, and each one jumps to its entity on the canvas or opens the dialog that resolves it; the drawer searches findings and opens at once on a large schema, 50 per section with Show more
 - It knows a correct link table from a broken one: a composite primary key over the foreign key pair and a surrogate id plus a unique constraint on that pair are both accepted, while a multi-column unique containing a nullable column - which enforces nothing, because NULLs compare as distinct - is caught
 - A live count badge on the Lint button, colored by the most serious finding, works whether or not the mode is open
 - Per-finding ignores and per-rule switches are saved in the diagram file, so the conventions your team agreed on travel with the schema and get reviewed in Git

@@ -2,6 +2,20 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.12.1 - 2026-10-04
+- ✨ A Settings dialog in the home footer turns anonymous usage statistics and crash reports on or off; when off, nothing is sent. Usage events no longer carry page URLs, referrers, or device details, crash reports hide workspace, connection, and database names, and the web version no longer forwards the visitor's IP.
+- 🔧 Large diagrams open in seconds: only the tables on screen are drawn up front, the rest as you scroll to them. Selecting, dragging, and dropping a table no longer redraws every table, and dragging a table with 30 or more relations draws straight lines while it moves and routes the real ones on drop.
+- 🔧 The canvas scrolls to every table on a diagram taller or wider than 16000 px, and an agent can group a thousand tables into legends within the tool's time limit, now with a side to place new legends on.
+- 🔧 The Lint drawer opens straight away on a large schema, showing 50 findings per section with Show more for the rest; it gains a search box and remembers which sections are open.
+- 🔧 Releasing a new relation off an entity lets you pick its destination by name.
+- 🔧 A field keeps its default across a type change while the default is still valid for the new type, and widening a PostgreSQL serial column from INTEGER to BIGINT widens its sequence and keeps its default, so inserts neither fail nor stop at 2147483647.
+- 🔧 A copy icon on the Planned migration header copies the whole migration without opening it, SQL line numbers are left out when copying, and table, column, and constraint names are set in a monospace font in the Impact drawer, the migration file dialog, and the preview's findings.
+- 🔧 The minimap shows the whole viewport with an even margin, and its redundant close button is gone.
+- 🐛 Impact analysis of a migration file reads DROP VIEW and DROP MATERIALIZED VIEW, so a view the file drops before a type change no longer reports the change as refused.
+- 🐛 PNG and JPEG export of a very large diagram produces an image, and a failed export says so instead of looking cancelled.
+- 🐛 MySQL escapes a quoted text default once, so ENUM and SET accept it, keeps BINARY and VARBINARY lengths, and writes CURRENT_DATE and CURRENT_TIME defaults as (CURDATE()) and (CURTIME()); SQLite no longer stores a quoted default's quotes in the value; PostgreSQL serial columns and SQL Server VARBINARY(MAX) no longer offer defaults the database refuses.
+- 🐛 A relation no longer runs back through the table at its other end after a drag, and stays on both tables' edges when the two barely overlap.
+
 ## v2.12.0 - 2026-10-01
 - ✨ Refresh & merge - from the Reset ERD dropdown, Cmd+Shift+R, or the command palette - re-reads the database after an outside migration, such as an ORM's, and keeps positions, sizes, colours, legends, and relation routes, even when the foreign keys were renamed. The result is one unsaved change you review before saving.
 - ✨ Pointing a diagram at another database, or connecting a design to a database that already has tables, opens the merged diagram as an unsaved change, so closing without saving leaves the file as it was.
