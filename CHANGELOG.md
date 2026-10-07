@@ -2,6 +2,21 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.12.3 - 2026-10-06
+- 🔧 A Feedback button in the home and diagram footers, and a Send feedback command in the palette, open a dialog that sends a message to the Schemity team from inside the app, with an optional email for a reply. The dialog shows the version, OS, and language it sends along, keeps your draft until a send succeeds, and the Schemity Lite privacy policy lists what a message carries.
+- 🔧 Every toolbar button's tooltip says in one sentence what the feature does and links to its docs page with Learn more; the tooltip opens after a short pause and stays open while hovered. Tooltips are white with dark text everywhere in the app.
+
+## v2.12.2 - 2026-10-06
+- ✨ Context Map arrows show what a dependency rests on: solid for declared foreign keys, dashed for virtual relations, and a ringed count badge when both mix, the same in SVG and Mermaid export. The dependency drawer counts how many relations behind an arrow are declared and how many are virtual, and agents see the same through `get_context_views`.
+- ✨ Selecting a context on the Context Map highlights what it depends on, dims what depends on it, and hides the other arrows; Shift+click (Cmd+click on macOS) selects several contexts. A Cycles button lists the dependency loops between context views, shortest first - picking one selects its contexts and lights only the loop.
+- ✨ A diagram can open on its Context Map instead of the main diagram (Open on, in the connection dialog); the main canvas is built only when it is first shown.
+- ✨ Deactivate this machine in the License dialog frees its seat, so the key can be activated on another machine.
+- ✨ Each diagram in the list shows how many entities and relations it holds.
+- 🔧 On desktop, PNG and JPEG export are rendered natively, using under 3 GB instead of 9-11 GB on a 1035-table diagram.
+- 🔧 Changing an integer column to boolean on PostgreSQL handles the old default and a CHECK (col IN (0, 1)) list, and the field dialog offers TRUE and FALSE as defaults.
+- 🔧 Desktop usage statistics, when switched on, carry the app version, as the privacy policy already lists.
+- 🐛 A Context Map that fits the window no longer scrolls into empty margin and hides its top boxes under the toolbar.
+
 ## v2.12.1 - 2026-10-04
 - ✨ A Settings dialog in the home footer turns anonymous usage statistics and crash reports on or off; when off, nothing is sent. Usage events no longer carry page URLs, referrers, or device details, crash reports hide workspace, connection, and database names, and the web version no longer forwards the visitor's IP.
 - 🔧 Large diagrams open in seconds: only the tables on screen are drawn up front, the rest as you scroll to them. Selecting, dragging, and dropping a table no longer redraws every table, and dragging a table with 30 or more relations draws straight lines while it moves and routes the real ones on drop.

@@ -4,6 +4,7 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **Context Map dependency kinds and cycles** (v2.12.2) - arrows tell declared foreign keys from virtual relations, selecting a context shows what it depends on and what depends on it, a Cycles button lists dependency loops, and a diagram can open on its Context Map
 - **Refresh & merge** (v2.12.0) - re-read the database after an outside migration, such as an ORM's, keeping your layout, colours, legends, and relation routes, as one unsaved change you review before saving
 - **MCP server for AI agents** (v2.11.0, v2.11.1) - replaces the in-app AI chat: the agent you already use reads your schema, analyzes pending changes, and stages diagram edits you review in History before saving, with setup snippets for Claude Code, Claude Desktop, Cursor, Codex, and OpenCode
 - **Change preview** (v2.11.1) - a read-only picture of a migration or your own pending edits, marking dropped, added, altered, and renamed tables and columns with the foreign keys they affect; an agent can draw one on the canvas too
@@ -11,7 +12,6 @@ What we recently shipped, what we are building, and what we are considering. Thi
 - **Nine more lint rules** (v2.11.1) - twenty-six in all, including the first architecture rule reading context views, plus a Lint Rules tab that explains, searches, and sorts every rule
 - **Virtual and inferred relations** (v2.10.2) - document the dependencies a database never declares, drawn with their own dash and kept out of migrations, and have them inferred from column naming on import and refresh
 - **Generated columns** (v2.11.1) - GENERATED ALWAYS AS and SQL Server computed columns read on every database and drawn as `= expression`
-- **Japanese and Simplified Chinese** (v2.10.0) - the whole interface, picked from a globe dropdown and applied instantly with no reload; generated SQL, migrations, and the data dictionary stay English on purpose, so the same schema exports to the same file in every language
 
 ## Building now
 

@@ -82,7 +82,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 ### Workspaces & Storage
 - Multiple workspaces, each a folder on disk; every diagram is a plain local JSON file you can version control with Git
-- Manage multiple database connections and diagrams per workspace; reorder by drag and drop
+- Manage multiple database connections and diagrams per workspace; reorder by drag and drop, and each diagram row shows how many entities and relations it holds
 - Import an existing workspace from anywhere on your machine; open the workspace folder in the native file manager with one click
 - Workspaces are marked in the list for what they are: a Git branch icon when the folder sits inside a Git repository (at any depth), and its own icon when the workspace was imported from outside the default `~/schemity` folder - the two markers are independent and stack
 - Schemity reopens the last used workspace instead of the top of the list
@@ -127,7 +127,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - A toggleable minimap shows the whole diagram in miniature with a rectangle marking your viewport: click to jump, drag to pan. Each view carries its own, and entities not yet confirmed by the database are the one thing drawn in color
 - An empty canvas points at the way in - right-click and the create-entity shortcut on the main view, import on a context view - and the hint never appears in exports
 - Legends and entities support markdown descriptions - a small triangle in the top-right corner opens the rendered description in a modal; context views carry their own, opened from the context view list
-- Export diagrams and context views as JPG, PNG, or SVG, export the full SQL, or export a Mermaid erDiagram that renders natively on GitHub, GitLab, Notion, and Obsidian
+- Export diagrams and context views as JPG, PNG, or SVG, export the full SQL, or export a Mermaid erDiagram that renders natively on GitHub, GitLab, Notion, and Obsidian; on desktop, PNG and JPEG are rendered natively, so a thousand-table diagram exports in a fraction of the memory a browser canvas needs
 - A shared diagram opens in the theme its author published it in, applied as a preview so it never rewrites the visitor's own preference; an embed can drop its footer link with `?hidelink=1` while keeping the minimap and theme toggles
 - Get SQL and Get DBML read whatever is selected, from the right-click menu, the keyboard shortcut, or the command palette alike, so the SQL or DBML of an arbitrary group of tables is one gesture rather than a table at a time
 - SVG exports are true vector documents, not a screenshot wearing an .svg extension: shapes are real shapes grouped per entity and names stay live text, so a diagram opens as editable artwork in Figma, Affinity Designer, Illustrator, or Inkscape
@@ -146,9 +146,11 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 ### Context Map
 - A bird's-eye view that renders each context view as a single node, with arrows for the dependencies between contexts and a badge showing how many foreign keys flow in each direction; it arranges itself by those dependencies the first time you open it
 - Arrow shape encodes dependency health: a straight arrow is a one-way dependency, a curved arrow means two contexts depend on each other - circular dependencies stand out at a glance
-- Click a context to highlight all of its dependency arrows; double-click an arrow to see every underlying foreign key behind it
+- Arrows show what a dependency rests on: solid for declared foreign keys, dashed for virtual relations, and a ringed count badge when both mix, in SVG and Mermaid export too
+- Selecting a context highlights what it depends on, dims what depends on it, and hides the other arrows; Shift+click (Cmd+click on macOS) selects several contexts. Double-click an arrow to see every relation behind it, with how many are declared and how many virtual
+- A Cycles button lists the dependency loops between context views, shortest first - picking one selects its contexts and lights only the loop
 - Each context's color carries over to its node and outgoing arrows, and fuzzy search focuses any context instantly, even on a busy map
-- The map is a two-way door: an enter icon on the selected box opens that context view - as does a double click anywhere on the box - a floating Context Map button in every view gets you back, and the map's exit lands on Main, the one view nothing else on the map could reach
+- The map is a two-way door: an enter icon on the selected box opens that context view - as does a double click anywhere on the box - a floating Context Map button in every view gets you back, and the map's exit lands on Main, the one view nothing else on the map could reach. A diagram can open on its Context Map instead of the main diagram (Open on, in the connection dialog), building the main canvas only when it is first shown
 - Export the Context Map as JPG, PNG, or SVG, or as a Mermaid diagram
 
 ### Fields & Constraints
@@ -159,7 +161,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Entity templates pre-populate every new table with the fields your team always adds
 - Fields carry descriptions of their own, marked by a bar on the leading edge of the row - drawn in SVG exports too - so which columns are documented is a glance rather than an audit; a description is diagram data, never a schema change, so documenting a column produces no migration
 - Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`, the whole expression cut to the entity's width; their field form locks everything except name and description
-- Array type support for PostgreSQL; smart default values picked from special values or check constraints, kept across a type change while still valid; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
+- Array type support for PostgreSQL; smart default values picked from special values or check constraints, kept across a type change while still valid - an integer column turned boolean on PostgreSQL carries its default and a 0/1 check list across, and offers TRUE and FALSE; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
 
 ### Relationships & Foreign Keys
 - Create foreign keys by dragging a field to another entity, or release a new relation and pick its destination by name - 1:N, 1:1, and N:N with auto-generated junction tables; self-referencing keys supported
@@ -193,7 +195,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 ### AI Agents (MCP)
 - Schemity is an MCP server, with setup snippets in the MCP drawer for Claude Code, Claude Desktop, Cursor, Codex, OpenCode, and MCP Inspector; `schemity --mcp` runs over stdio and can launch the app itself
-- An agent reads your schema, context views, and dependencies - including indirect cycles spanning several contexts - lints it, and analyzes the impact of pending changes or a migration file
+- An agent reads your schema, context views, and dependencies - including indirect cycles spanning several contexts and which dependencies rest on virtual relations - lints it, and analyzes the impact of pending changes or a migration file
 - It edits what a person edits - entities, columns, keys, constraints, indexes, relations, legends, and context views - as unsaved changes you review in History (F6) and save yourself; nothing it does writes the diagram file or the database
 - It can group entities into legends, route relations, and draw a change preview on the canvas so you see what a change means
 - Every undo step an agent makes names the agent that made it
@@ -206,10 +208,11 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Shift is the multi-select modifier on every platform - Shift+click to add an entity, Shift+drag to box-select - with the platform's own toggle key kept as an alias
 - Move entities by keyboard in 1 px or 20 px steps
 - History (F6) describes every undo step and when it was made
+- Every toolbar button's tooltip says what the feature does, with a Learn more link to its docs page; a Feedback button in the footer sends a message to the Schemity team from inside the app
 
 ## Pricing
 
-**$129 one-time** - a one-time purchase ERD tool, not a subscription. Includes 1 year of updates; $69/year to keep receiving updates after that. Your licence never expires and security patches stay free, so the app keeps working forever even if you never renew.
+**$129 one-time** - a one-time purchase ERD tool, not a subscription. Includes 1 year of updates; $69/year to keep receiving updates after that. Your licence never expires and security patches stay free, so the app keeps working forever even if you never renew. Deactivate this machine in the License dialog frees a seat, so the key moves to another machine.
 
 **Free for education** (email support@schemity.com with your .edu address) and a **2-week full trial** for everyone, no credit card. After the trial, offline design keeps working and nothing on your disk is locked away - what pauses is the live-database half and the features built on it, including context views, the minimap, schema lint, impact analysis, and the MCP server, along with SVG, SQL, DBML, and Mermaid export and DBML import, until a licence unlocks them again; PNG, JPEG, Schemity JSON, and Import SQL stay free. Existing workspaces stay usable; only creating a new one is gated. Details on the [pricing page](https://schemity.com/pricing).
 
