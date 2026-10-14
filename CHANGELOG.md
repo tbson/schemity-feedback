@@ -2,6 +2,39 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.13.0 - 2026-10-13
+- ✨ Snowflake support for design: draw a diagram or import a `GET_DDL` script, and export a full CREATE script. Types are kept under the names Snowflake reports, CHECK constraints are supported, TIMESTAMP_NTZ columns are offered SYSDATE() as their default, and relations leave out ON DELETE and ON UPDATE, which Snowflake never enforces. Schemity never connects to a Snowflake account.
+- ✨ Get SQL and Export > SQL file can write the same tables for another database - PostgreSQL, MySQL, SQL Server, SQLite, or Snowflake - translating types, functions, defaults, enums, identity and generated columns, and over-long names, with a report of every changed type and anything it could not translate. The diagram stays on its own database. Converted SQL is checked against real PostgreSQL, MySQL, SQL Server, and SQLite.
+- ✨ Export to PlantUML and D2, with tables grouped by their legends, and to OpenAPI 3.1: one JSON schema per table with types, required and nullable columns, enum values, and descriptions.
+- ✨ Export the data dictionary as a print-ready A4 PDF with a cover and contents.
+- ✨ Text exports (SQL, DBML, Mermaid, PlantUML, D2, OpenAPI, Markdown data dictionary) open a preview with Copy and Save and a line count. Mermaid, PlantUML, and D2 label a relationship line with its description.
+- ✨ Import SQL updates tables already on the diagram, marking each New, Updated, or Unchanged and never removing one, as a single undoable change. It reads one statement at a time: non-table statements are skipped and counted, a table it cannot read is named with the reason, and text inside string literals is never touched. It picks the schema to import, keeps same-named tables in different schemas apart, and stores names in each database's case, so a re-import updates instead of duplicating.
+- ✨ A Database changed button shows what the last database merge changed on the change preview, including removed tables (a plain list on restricted tiers). Opening a diagram now reads the live database, so a change made through another tool shows up there, and tables the database added get the dashed new-table border.
+- ✨ Search diagrams across all workspaces by name, database name, or workspace name with Cmd+F (Ctrl+F on Windows and Linux) or the search button in the Diagram header.
+- ✨ MySQL UNSIGNED integers show as uBIGINT on the canvas, are set with an Unsigned checkbox, and are read from the database and Import SQL and written in migrations and exports. A foreign key column follows its key's UNSIGNED, so a relation to a Laravel or WordPress BIGINT UNSIGNED key migrates.
+- ✨ A TEAM license key covers 15 seats, managed at license.schemity.com/seats, where the buyer signs in by email link, sees each machine, and frees seats remotely.
+- ✨ A machine that cannot reach the license server activates with a token from support, pasted into the license key field.
+- 🔧 DBML import is removed: Import SQL is the single import. Get DBML is removed from the entity, selection, and legend menus; Export > DBML file stays.
+- 🔧 Renaming a column carries the change into the foreign keys that reference it.
+- 🔧 An agent's edits stay on the diagram behind an Agent changes button instead of opening the preview. An agent can delete what it created since the last save without a confirm, if no one has edited it, and on a new diagram it names primary keys `id` and foreign keys `<table>_id`.
+- 🔧 Legends show on the minimap in their own colour, and legend tints are slightly stronger on the canvas, minimap, and SVG export.
+- 🔧 The relation dialog names the relation it edits: the joined columns under the title, the constraint name beneath.
+- 🔧 Tables with no relations are laid out in a compact grid in a change preview.
+- 🔧 The License dialog shows why a license check failed, copyable; a key can be entered from the expired popup, and a badge appears when the license server is unreachable. An expired trial can install every update.
+- 🔧 MySQL token login over TLS works with AWS RDS, Azure, and Cloud SQL IAM tokens, and the password command runs through cmd.exe on Windows.
+- 🔧 Relation reshaping and entity resizing stay smooth on large diagrams. The selected relation's bend handles are drawn above tables, so a bend hidden behind a table can be dragged or removed.
+- 🔧 Feedback from the desktop app includes the license state and machine ID.
+- 🐛 On Windows, a missing WebView2 Runtime shows a message with a link to Microsoft's download page instead of crashing.
+- 🐛 Saving right after ignoring a lint finding or changing a template or context view keeps layout changes; Discard & Switch fully reverts the main diagram, even after more than 30 edits; an edit made while a diagram is opening is kept; and saving a context view while a database merge is pending saves the merge too.
+- 🐛 Editing a connection keeps the settings the form does not show.
+- 🐛 MySQL column changes keep UNSIGNED, COMMENT, ON UPDATE, and AUTO_INCREMENT; SQL Server column changes keep a non-default collation; SQLite table rebuilds keep partial and expression indexes, and refuse tables they cannot rebuild faithfully (COLLATE, STRICT, WITHOUT ROWID).
+- 🐛 PostgreSQL migrations no longer give a primary key that is also a foreign key GENERATED ALWAYS AS IDENTITY; SQLite scripts give every table its primary key and drop tables children first; a SQL Server nullable unique column accepts more than one NULL row; MySQL export writes a UUID() default as an expression.
+- 🐛 Reading a live database: a foreign key that is the whole primary key is 1:1, BIT columns keep their width, a MySQL CHECK loses its backslash escapes, and the Default dropdown recognises the clock defaults each database reports.
+- 🐛 Import SQL reads more of what real scripts contain - SSMS defaults added with ALTER TABLE, MySQL inline, functional, and prefix indexes, column CHECKs, COMMENT descriptions, PostgreSQL IS JSON checks, VIRTUAL generated columns and CREATE TYPE ... AS ENUM, SQLite GLOB checks, SQL Server MONEY, and a blank DEFAULT '' - and no longer counts PRAGMA, SET, USE, BEGIN, and COMMIT as skipped.
+- 🐛 Duplicating a primary or foreign key field is blocked from Ctrl+D and the command palette, as it already was in the context menu.
+- 🐛 Clicking a relation at a bend selects it without marking the diagram unsaved, a dragged table stays visible while auto-scroll carries it far across the canvas, and Cmd/Ctrl+A in a text export preview or the SQL dialog selects only the text.
+- 🐛 A table whose primary key is named after it (orders.order_id) no longer gets an inferred relation to itself, and upper-case timestamp columns such as CREATED_AT are placed last like created_at.
+
 ## v2.12.3 - 2026-10-06
 - 🔧 A Feedback button in the home and diagram footers, and a Send feedback command in the palette, open a dialog that sends a message to the Schemity team from inside the app, with an optional email for a reply. The dialog shows the version, OS, and language it sends along, keeps your draft until a send succeeds, and the Schemity Lite privacy policy lists what a message carries.
 - 🔧 Every toolbar button's tooltip says in one sentence what the feature does and links to its docs page with Learn more; the tooltip opens after a short pause and stays open while hovered. Tooltips are white with dark text everywhere in the app.

@@ -4,14 +4,14 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **SQL conversion between databases** (v2.13.0) - Get SQL and Export > SQL file write the same tables for PostgreSQL, MySQL, SQL Server, SQLite, or Snowflake, with a report of every changed type, checked against real engines
+- **Snowflake for design** (v2.13.0) - draw a diagram or import a `GET_DDL` script, and export a full Snowflake CREATE script
+- **PlantUML, D2, OpenAPI, and PDF data dictionary export** (v2.13.0) - plus a preview with Copy and Save for every text export
+- **Fetch & merge on open** (v2.13.0) - opening a diagram fetches the live database and merges it as an unsaved change, and a Database changed button previews what changed against your diagram - from another tool or your AI agent - before you save
+- **Import SQL that updates** (v2.13.0) - a re-import updates tables already on the diagram, marking each New, Updated, or Unchanged
 - **Context Map dependency kinds and cycles** (v2.12.2) - arrows tell declared foreign keys from virtual relations, selecting a context shows what it depends on and what depends on it, a Cycles button lists dependency loops, and a diagram can open on its Context Map
 - **Refresh & merge** (v2.12.0) - re-read the database after an outside migration, such as an ORM's, keeping your layout, colours, legends, and relation routes, as one unsaved change you review before saving
 - **MCP server for AI agents** (v2.11.0, v2.11.1) - replaces the in-app AI chat: the agent you already use reads your schema, analyzes pending changes, and stages diagram edits you review in History before saving, with setup snippets for Claude Code, Claude Desktop, Cursor, Codex, and OpenCode
-- **Change preview** (v2.11.1) - a read-only picture of a migration or your own pending edits, marking dropped, added, altered, and renamed tables and columns with the foreign keys they affect; an agent can draw one on the canvas too
-- **Impact analysis** (v2.11.0) - a pending migration, or a hand-written or ORM-generated migration file, checked against the connected database for data loss, failing statements, rewrites, locks, and dependent objects before anything runs
-- **Nine more lint rules** (v2.11.1) - twenty-six in all, including the first architecture rule reading context views, plus a Lint Rules tab that explains, searches, and sorts every rule
-- **Virtual and inferred relations** (v2.10.2) - document the dependencies a database never declares, drawn with their own dash and kept out of migrations, and have them inferred from column naming on import and refresh
-- **Generated columns** (v2.11.1) - GENERATED ALWAYS AS and SQL Server computed columns read on every database and drawn as `= expression`
 
 ## Building now
 
@@ -23,7 +23,6 @@ If any of these matter to you, open a feature request or vote with a 👍 on the
 
 - **Headless CLI** - render SVG/PNG, emit SQL or DBML from the diagram file, and a CI check that fails when the committed ERD drifts from a target database
 - **Large-schema abstraction** - collapse entities to title-only or keys-only, and a focus mode that dims everything not connected to the selected entity (the minimap half of this shipped in v2.9.0)
-- **Pre-sync drift preview** - before a re-sync applies, a reviewable summary of what will be added, changed, and removed
 - **File-vs-file schema diff** - diff two versions of a diagram file (or two git commits) into a visual changelog and generated ALTER statements
 - **Notation switching** - numeric/min-max cardinalities as an alternative to crow's foot
 
