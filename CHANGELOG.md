@@ -2,6 +2,24 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.13.1 - 2026-10-19
+- ✨ Auto increment works on every database: the field editor's tick sets it anywhere, with start and step on PostgreSQL, SQL Server, and Snowflake, and a key the row must supply can be designed too. PostgreSQL serial columns are read and written back as SERIAL or BIGSERIAL, and SQL Server diagrams record whether a column is IDENTITY.
+- ✨ A Virtual relations menu shows or hides every virtual relation, on the canvas and in image exports, and removes the inferred ones, each with a count. Connections and the Import SQL drawer can turn off inferring them from column names.
+- ✨ A third Naming option, UPPER_SNAKE_CASE, the default for new Snowflake diagrams; generated key and index names follow their table's case.
+- ✨ MCP agents find a saved diagram by name with find_diagrams and open it in a new tab with open_diagram.
+- 🔧 Real schemas round-trip: SQL from an imported script or a live database rebuilds the same tables, keys, constraints, and indexes, and Refresh & merge right after an Import SQL lists no changes on PostgreSQL, MySQL, SQL Server, and SQLite. SQL keeps each table's declared column order, time columns keep their fractional-second precision, and every database writes NOT NULL on a primary key.
+- 🔧 PostgreSQL: indexes keep expression keys, operator classes, WHERE conditions, INCLUDE columns, and NULLS NOT DISTINCT; foreign keys keep DEFERRABLE, set from the relation dialogs; Import SQL keeps CREATE EXTENSION and the functions and sequences a table needs as setup SQL that Save and View SQL run first, and a sequence a column owns is kept with its table.
+- 🔧 MySQL: ON UPDATE CURRENT_TIMESTAMP, prefix indexes, character sets and collations, FLOAT/DOUBLE precision, and an empty-string default are kept and written back. A new foreign key column takes its key's character set and collation, and changing the type or sign of a column at either end of a foreign key drops and re-adds the key, as MySQL requires.
+- 🔧 SQL Server: VARCHAR, MONEY, DATETIME, XML, and the other declared types are kept and offered in the field editor; indexes keep INCLUDE columns, DESC keys, filters, and CLUSTERED; Import SQL skips procedures, functions, triggers, and views instead of misreading them; scripts start with SET ANSI_NULLS ON and SET QUOTED_IDENTIFIER ON.
+- 🔧 SQLite: each column's declared type, AUTOINCREMENT, WITHOUT ROWID, STRICT, partial and expression indexes, and foreign key names are kept; virtual tables (FTS5, R*Tree) are named and left out; the index list no longer asks for a type SQLite does not have.
+- 🔧 Snowflake: CLUSTER BY, TRANSIENT, identity START, INCREMENT and ORDER, column collations, and sequences are kept and written back. OpenAPI export writes a whole-number NUMBER as an integer.
+- 🔧 Import SQL keeps a CREATE UNIQUE INDEX as a unique index, marks a table Updated only when a migration would change it, no longer counts a dump's DROP, INSERT, and LOCK TABLES as skipped, places new tables below the existing ones with the auto layout's spacing, and remembers an unticked Infer virtual relations.
+- 🔧 Relation routing keeps parallel lines apart in dense layouts. Fit width covers a table's name as well as its columns, and an agent's group_entities fits each grouped table's width and removes legends it emptied.
+- 🔧 Search centres a found column on a table taller than the window, and diagram search ranks a diagram's name and database name alike, word by word. The connection form shows each database's logo, and the Entity SQL dialog wraps long lines with line numbers.
+- 🐛 A text default left behind by a dropped CHECK opens as custom text, and boolean defaults read the same on the canvas as in the field form.
+- 🐛 A field row redraws when its UNSIGNED, precision, or scale changes, and relation lines stay attached after drags and resizes.
+- 🐛 A relinked diagram opens with an unsaved step only when the merge changed something.
+
 ## v2.13.0 - 2026-10-13
 - ✨ Snowflake support for design: draw a diagram or import a `GET_DDL` script, and export a full CREATE script. Types are kept under the names Snowflake reports, CHECK constraints are supported, TIMESTAMP_NTZ columns are offered SYSDATE() as their default, and relations leave out ON DELETE and ON UPDATE, which Snowflake never enforces. Schemity never connects to a Snowflake account.
 - ✨ Get SQL and Export > SQL file can write the same tables for another database - PostgreSQL, MySQL, SQL Server, SQLite, or Snowflake - translating types, functions, defaults, enums, identity and generated columns, and over-long names, with a report of every changed type and anything it could not translate. The diagram stays on its own database. Converted SQL is checked against real PostgreSQL, MySQL, SQL Server, and SQLite.
