@@ -22,7 +22,7 @@ Also in this repository:
 
 **Schemity** is database design software for software engineers that turns your live database into a local architecture map. Understand your schema, see the impact of every change, and design the next one: connect a database and Schemity draws every table, inferring the foreign keys it never declared; give your AI agent the same schema through a local MCP server; and review every schema change, yours or your agent's, with lint, dependency impact, and the exact migration SQL before anything is applied. Diagrams are plain JSON files on your own machine, so they live in Git next to your code. No schema upload, no subscription.
 
-Supported databases: **PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQLite**, plus **Snowflake** for design only. Runs on macOS, Windows, and Linux.
+Supported databases: **PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQLite**, plus **Snowflake** (design, and a read-only live connection). Runs on macOS, Windows, and Linux.
 
 - Website: [schemity.com](https://schemity.com)
 - Documentation: [schemity.com/doc](https://schemity.com/doc)
@@ -94,7 +94,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 ### Database Connections
 - PostgreSQL, Supabase, MySQL, MariaDB, SQL Server, and SQLite; multi-schema support on PostgreSQL
-- Snowflake for design: draw a diagram or import a `GET_DDL` script and export a full CREATE script, with types named as Snowflake reports them; Schemity never connects to a Snowflake account
+- Snowflake: draw a diagram or import a `GET_DDL` script and export a full CREATE script, with types named as Snowflake reports them - or connect read-only with a key pair or programmatic access token, and Schemity reads one schema's tables, views, and dynamic tables over Snowflake's SQL REST API. A connected Snowflake diagram is structure-locked and never migrated; descriptions, layout, legends, context views, and virtual relations stay editable
 - Direct or SSH tunnel connections; test a connection before saving it; the connection form shows each database's logo
 - Paste a connection string and the dialog fills itself in - PostgreSQL, MySQL, and SQL Server URIs, a `jdbc:` prefix, and the ADO.NET key/value form the Azure portal hands out; a malformed string is reported rather than half-applied, and every parameter left unused is listed
 - TLS verification, not just TLS: verify-ca and verify-full check the server's certificate against a chain, with custom root CA and client certificate files passed through to the drivers
@@ -128,7 +128,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Search can be scoped to one kind of thing by the same letter the results are labelled with: `[e`, `[f`, or `[l` before the query restricts it to entities, fields, or legends, with the closing bracket and the space optional
 - Fields also match on their type, using exactly the text the canvas shows - `VARCHAR(255)` on its length, `TEXT[]` on its array suffix, `[feric` on every NUMERIC column - so you can find the columns that share a shape rather than a name; names still rank above types
 - Large diagrams stay fast: only the tables on screen are drawn up front, a table with 30 or more relations drags with straight lines and routes them on drop, and the canvas scrolls to a diagram of any size
-- A toggleable minimap shows the whole diagram in miniature with a rectangle marking your viewport: click to jump, drag to pan. Each view carries its own; legends are drawn in their own colour and entities not yet confirmed by the database in orange
+- A toggleable minimap shows the whole diagram in miniature with a rectangle marking your viewport: click to jump, drag to pan. Each view carries its own; legends are drawn in their own colour and entities added since the last save in orange
 - An empty canvas points at the way in - right-click and the create-entity shortcut on the main view, import on a context view - and the hint never appears in exports
 - Legends and entities support markdown descriptions - a small triangle in the top-right corner opens the rendered description in a modal; context views carry their own, opened from the context view list
 - Export diagrams and context views as JPG, PNG, or SVG, export the full SQL or DBML, a Mermaid erDiagram that renders natively on GitHub, GitLab, Notion, and Obsidian, PlantUML or D2 with tables grouped by their legends, or OpenAPI 3.1 with one JSON schema per table; text exports open a preview with Copy and Save; on desktop, PNG and JPEG are rendered natively, so a thousand-table diagram exports in a fraction of the memory a browser canvas needs
@@ -160,8 +160,8 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 ### Fields & Constraints
 - Distinct icons for primary keys, foreign keys, and what each plain field holds - text, whole and fractional numbers, booleans, dates and times, JSON, and UUID, with arrays drawing their element's icon inside brackets; nullable and unique badges and default values shown directly on the entity
-- Check constraints, composite unique constraints, and indexes managed visually; fields covered by an IN check constraint are underlined, with their allowed values one keystroke away
-- Indexes keep what each database adds: PostgreSQL expression keys, operator classes, WHERE conditions, and NULLS NOT DISTINCT; INCLUDE columns, DESC keys, filters, and CLUSTERED on SQL Server; MySQL prefix indexes; SQLite partial and expression indexes
+- Check constraints, composite unique constraints, and indexes managed visually - a duplicate is refused with the name of what already covers it, and the footer's counts open the matching tab; fields covered by an IN check constraint are underlined, with their allowed values one keystroke away
+- Indexes keep what each database adds: PostgreSQL expression keys, operator classes, WHERE conditions, NULLS NOT DISTINCT, storage parameters, and any access method, including pgvector HNSW and IVFFlat with their options; INCLUDE columns, DESC keys, filters, and CLUSTERED on SQL Server; MySQL prefix indexes; SQLite partial and expression indexes
 - Enum columns carry the values their type allows, on PostgreSQL as well as MySQL - read in their declared order and shown as read-only tags, because the values belong to the type rather than to the column
 - Convention-aware placement: new fields land above timestamp fields, and a new foreign key lands below the whole key block - under the primary key, any composite primary-foreign keys, and any existing foreign keys - matching the order entities are already laid out in
 - Entity templates pre-populate every new table with the fields your team always adds
@@ -170,6 +170,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Columns keep their types as declared - SQL Server VARCHAR, MONEY, DATETIME, and XML, SQLite's declared types, fractional-second precision such as TIMESTAMP(6) - along with MySQL ON UPDATE CURRENT_TIMESTAMP, character sets, and collations, and Snowflake collations; SQL keeps each table's declared column order
 - Numeric precision and scale are drawn on the entity - NUMERIC(4,1) reads as NUMERIC(4,1) - and generated columns (GENERATED ALWAYS AS, SQL Server computed columns) are read on every database and drawn as `= expression`, the whole expression cut to the entity's width; their field form locks everything except name and description
 - Array type support for PostgreSQL; smart default values picked from special values or check constraints, kept across a type change while still valid - an integer column turned boolean on PostgreSQL carries its default and a 0/1 check list across, and offers TRUE and FALSE; Cmd/Ctrl+Enter in the field drawer saves and moves on to the next field
+- Vector columns on every database - pgvector `vector`, `halfvec`, and `sparsevec`, MySQL 9 and SQL Server 2025 `VECTOR(n)`, Snowflake `VECTOR(FLOAT, n)` - keep their dimension through reading, import, export, and conversion
 - MySQL UNSIGNED integers show as uBIGINT, set with an Unsigned checkbox; a foreign key column follows its key's UNSIGNED, so a relation to a Laravel or WordPress BIGINT UNSIGNED key migrates
 
 ### Relationships & Foreign Keys
@@ -180,7 +181,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Selecting an entity draws every relation touching it at double weight, both ends counted, so its wiring is traceable across a dense diagram at a glance
 - The selected relation changes in kind rather than degree - drawn as dots in a fixed contrast color, black on light and white on dark - so it stays findable inside a bundle of parallel lines; the crow's feet and cardinality bars stay solid, and SVG exports are untouched
 - Virtual relations document a dependency the database does not declare, using the columns that already carry it: drawn with their own dash, never written to a migration or DBML, and kept through every refresh, rename, and paste
-- Undeclared foreign keys are inferred from column naming on connect, refresh, open, and import, arriving as virtual relations that say where they came from; one you delete stays deleted, and inference can be turned off per connection or per import
+- Undeclared foreign keys are inferred from column naming on connect, refresh, open, and import, arriving as virtual relations that say where they came from; one you delete stays deleted, the id half of a polymorphic pair is skipped, and inference can be turned off per connection or per import
 - A Virtual relations menu shows or hides every virtual relation, on the canvas and in image exports, and removes the inferred ones, each with a count
 - Relations carry their own description, drawn along the line and in SVG, Mermaid, PlantUML, and D2 export; double-click a relation to open its dialog, which names the joined columns and constraint it edits
 - Custom waypoints with rounded corners, line hops where lines cross, and double-click gestures to reshape or reset a line; Route Relations runs lines around the tables so they cross less and share corridors as parallel lanes, kept apart even in dense layouts
@@ -189,16 +190,16 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 
 ### Migrations
 - Change the ERD and Schemity generates the SQL migration diff for review; it runs against the connected database only when you explicitly apply it
-- Dashed borders distinguish draft entities that do not exist in the database yet
+- Entities added since the last save render with a dashed border; on a live diagram, saving warns about entities the database does not have
 - Impact analysis (F7) checks the pending migration for data loss, statements that can fail on existing rows, table rewrites and locks, and dependent views, triggers, and functions - saying what the database does to each - and shows how far the change spreads through foreign keys and context views; row counts are catalog estimates unless you ask for an exact, read-only count; renames are followed through later steps
-- Renaming a column carries the change into the foreign keys that reference it; changing the type or sign of a MySQL column at either end of a foreign key drops and re-adds the key, as MySQL requires
-- Analyze a migration file - pasted or opened, hand-written or generated by Prisma, Alembic, or Flyway - against the connected database without executing any of it
-- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with the affected foreign keys, a findings drawer describing the plan in words, and the planned migration SQL numbered and wrapped, copied whole from its header
+- Renaming a column carries the change into the foreign keys that reference it; changing the type or sign of a MySQL column at either end of a foreign key drops and re-adds the key, as MySQL requires, and changing a SQL Server column's type drops and re-adds the keys, checks, and indexes that use it
+- Analyze a migration file - pasted or opened, hand-written or generated by Prisma, Alembic, or Flyway, or several files read in order as one migration - against the connected database without executing any of it; on PostgreSQL it names the table at the other end of a foreign key that a change locks while the key is checked
+- Change preview (Shift+F7) pictures a migration or your own pending edits: dropped, added, altered, and renamed tables and columns marked on a read-only canvas, with every changed table bordered and key, constraint, and index changes counted in its footer as (+1), (-1), or (~1), the affected foreign keys, a changes list marked [+], [-], or [~], a findings drawer describing the plan in words, and the planned migration SQL numbered and wrapped, copied whole from its header; when your own edits plan a migration, Preview changes waits in the canvas corner
 - The migration dialog numbers its SQL lines, a refused statement shows the database's DETAIL line naming the object in the way, and a failed migration also raises a notification
 - Exported SQL creates tables with their constraints inline - primary keys, unique and check constraints, and foreign keys inside CREATE TABLE, emitted in dependency order, with ALTER statements only where a deferred foreign key needs one; every database writes NOT NULL on a primary key, and SQL Server scripts start with SET ANSI_NULLS ON and SET QUOTED_IDENTIFIER ON
 
 ### Schema Lint
-- Twenty-six classes of schema problem, checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
+- Twenty-six classes of schema problem - including a SQL Server foreign key whose type differs from its key and a pgvector index PostgreSQL would refuse - checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
 - Findings are grouped by consequence - fails at runtime, constraint unenforced, permanent cost, convention worth confirming - rather than graded on a severity scale, and each one jumps to its entity on the canvas or opens the dialog that resolves it; the drawer searches findings and opens at once on a large schema, 50 per section with Show more
 - It knows a correct link table from a broken one: a composite primary key over the foreign key pair and a surrogate id plus a unique constraint on that pair are both accepted, while a multi-column unique containing a nullable column - which enforces nothing, because NULLs compare as distinct - is caught
 - A live count badge on the Lint button, colored by the most serious finding, works whether or not the mode is open
@@ -221,7 +222,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Shift is the multi-select modifier on every platform - Shift+click to add an entity, Shift+drag to box-select - with the platform's own toggle key kept as an alias
 - Move entities by keyboard in 1 px or 20 px steps
 - History (F6) describes every undo step and when it was made
-- Every toolbar button's tooltip says what the feature does, with a Learn more link to its docs page; a Feedback button in the footer sends a message to the Schemity team from inside the app
+- Toolbar drawers open and close from their button, Escape, or their shortcut without dimming the canvas; every toolbar button's tooltip says what the feature does, with a Learn more link to its docs page; a Feedback button in the footer sends a message to the Schemity team from inside the app
 
 ## Pricing
 

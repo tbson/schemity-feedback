@@ -2,6 +2,46 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.14.0 - 2026-10-30
+- ✨ Snowflake connects live, read-only: sign in with a key pair or a programmatic access token, and Schemity reads one schema's tables, columns, keys, views, and dynamic tables over Snowflake's SQL REST API, with no warehouse needed. A connected Snowflake diagram is structure-locked - entities, fields, keys, and real relations come from the warehouse, while descriptions, layout, legends, context views, and virtual relations stay editable - and it is never migrated. Database changed shows what the warehouse changed, and a table the role can no longer see reads as not visible, never dropped.
+- ✨ Vector columns on every database: pgvector `vector(1536)`, `halfvec(768)`, and `sparsevec(30000)`, MySQL 9 `VECTOR(n)`, SQL Server 2025 `VECTOR(n)`, and Snowflake `VECTOR(FLOAT, n)` keep their dimension through the live reader, Import SQL, and every export, and dialect conversion maps them between databases. The field dialog's length field reads Dimensions for a vector type.
+- ✨ pgvector HNSW and IVFFlat indexes keep their operator class and WITH options (m, ef_construction, lists), and the index dialog or an agent can create one. Every PostgreSQL index keeps its storage parameters, and any plain access method (hnsw, ivfflat, bloom, rum) is written as declared instead of turning into btree.
+- 🔧 Lint reports a pgvector HNSW or IVFFlat index on a vector column with no dimension or more than 2,000 dimensions (4,000 for halfvec), which PostgreSQL refuses.
+- 🔧 A second index on the same column gets its own name, and the unique and check constraint dialogs refuse a duplicate, naming what already covers it.
+- 🔧 Relation inference skips the id half of a polymorphic pair (`paymentable_id` beside `paymentable_type`), which points at a different table on every row.
+- 🔧 Agents can relate a column of a composite primary key (a junction table written key first), name an expression check after the columns it reads, and see diagrams listed by their own name with the database beside it.
+- 🔧 Route Relations stacks lanes that turn the same way without crossing, and slides apart two route ends that land on one line.
+- 🔧 Import SQL announces a failure in a notification as well as inline, and reads a MySQL SET column with its member list.
+- 🐛 Clicking Update on an untouched entity or field dialog no longer marks the diagram unsaved.
+- 🐛 A diagram that fits on screen can no longer be panned off into blank space.
+- 🐛 Import SQL no longer crashes with "undefined is not an object (evaluating 'point.x')" when routes change during the merge, and a change preview reads a value-list CHECK again.
+
+## v2.13.4 - 2026-10-26
+- 🔧 A release-only update: an upload error cancelled part of the v2.13.3 release, and v2.13.4 ships the same app on every platform.
+
+## v2.13.3 - 2026-10-26
+- ✨ The migration drawer opens several migration files as one migration, read in path order with numbers compared as numbers (Flyway V2 before V10), rollback files left out and listed.
+- ✨ An entity footer's u, cc, and idx counts are links that open the entity's drawer on the matching tab.
+- 🔧 Impact analysis on PostgreSQL names the table at the other end of a foreign key that a type change or a new key locks while the key is checked, and on MySQL names a table whose storage engine (MyISAM, MEMORY) keeps no foreign keys.
+- 🔧 Import SQL reads PostgreSQL keys added NOT VALID, as pg_dump writes them, and says what it is when it errors, with a button that opens the migration drawer instead.
+- 🔧 An agent can make a column named like a foreign key without declaring one.
+- 🔧 Relation routing swaps the attach points of two lines that leave one side of a table and cross each other.
+- 🐛 SQLite rebuilds a table to add a column whose default is an expression or a clock keyword, or that is STORED generated, which ADD COLUMN refuses.
+- 🐛 Toolbar tooltips close when their button is clicked instead of covering the drawer it opened.
+
+## v2.13.2 - 2026-10-22
+- ✨ A change preview borders every table it changes and shows key, constraint, and index changes in the table's footer as (+1), (-1), or (~1), with a bar on the columns they cover; a MySQL charset or collation change shows with its new value. The changes list marks each line [+], [-], or [~], and a click on a changed table opens its lines in Findings.
+- ✨ The canvas corner offers Preview changes whenever your own unsaved edits plan a migration.
+- 🔧 Toolbar drawers behave as one set: the open drawer's button shows pressed, a second click, Escape, or its shortcut closes it, and none dims the canvas any more.
+- 🔧 SQL Server: changing a column's type drops and re-adds the keys, checks, and indexes that use it, as SQL Server requires (a VARCHAR, NVARCHAR, or VARBINARY growing longer keeps its indexes), and lint reports a foreign key whose column differs from its key in type, length, or scale as failing at runtime.
+- 🔧 A PostgreSQL migration and the Entity SQL script create each enum type the database lacks, with its labels in declared order, before the tables.
+- 🔧 Time zone type changes run in UTC: PostgreSQL TIMESTAMP to TIMESTAMPTZ and MySQL DATETIME to TIMESTAMP set the session zone first.
+- 🔧 An agent's group_entities lays legends out to fill a 16:9 frame, moves tables out of a line's path, and brings the result into view; relation routing draws fewer corners and lets self-relation loops sit on any side.
+- 🔧 SQL Server column comments are read, and MySQL comments are read whole.
+- 🔧 Crash reports and MCP send no database details: no console or IPC breadcrumbs, queries, or connection error text.
+- 🐛 A table dragged past the top or left edge of the canvas stops at it instead of landing out of reach.
+- 🐛 A one- or two-field table keeps its fitted height after an edit; a SQL Server view's column is no longer read as an identity; double-clicking a diagram row no longer selects the whole window.
+
 ## v2.13.1 - 2026-10-19
 - ✨ Auto increment works on every database: the field editor's tick sets it anywhere, with start and step on PostgreSQL, SQL Server, and Snowflake, and a key the row must supply can be designed too. PostgreSQL serial columns are read and written back as SERIAL or BIGSERIAL, and SQL Server diagrams record whether a column is IDENTITY.
 - ✨ A Virtual relations menu shows or hides every virtual relation, on the canvas and in image exports, and removes the inferred ones, each with a count. Connections and the Import SQL drawer can turn off inferring them from column names.

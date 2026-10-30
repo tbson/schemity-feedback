@@ -4,14 +4,14 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **Snowflake live connection** (v2.14.0) - connect read-only with a key pair or access token; Schemity reads the schema, structure-locks the diagram, and shows warehouse drift
+- **Vector columns everywhere** (v2.14.0) - pgvector, MySQL 9, SQL Server 2025, and Snowflake vectors keep their dimension, and pgvector HNSW and IVFFlat indexes keep their options
+- **Several migration files as one** (v2.13.3) - analyze a Flyway or Prisma folder in order, rollback files left out
+- **Change preview shows every change** (v2.13.2) - changed tables bordered, key, constraint, and index changes counted in the footer, and Preview changes one click away from your own edits
 - **Auto increment on every database** (v2.13.1) - set it from the field editor anywhere, with start and step on PostgreSQL, SQL Server, and Snowflake
 - **Real-schema round trips** (v2.13.1) - SQL from an imported script or a live database rebuilds the same tables, keys, constraints, and indexes, checked against real PostgreSQL, MySQL, SQL Server, and SQLite schemas
 - **Virtual relations menu** (v2.13.1) - show, hide, or remove virtual relations in one place, and turn off inferring them per connection
 - **SQL conversion between databases** (v2.13.0) - Get SQL and Export > SQL file write the same tables for PostgreSQL, MySQL, SQL Server, SQLite, or Snowflake, with a report of every changed type, checked against real engines
-- **Snowflake for design** (v2.13.0) - draw a diagram or import a `GET_DDL` script, and export a full Snowflake CREATE script
-- **PlantUML, D2, OpenAPI, and PDF data dictionary export** (v2.13.0) - plus a preview with Copy and Save for every text export
-- **Fetch & merge on open** (v2.13.0) - opening a diagram fetches the live database and merges it as an unsaved change, and a Database changed button previews what changed against your diagram - from another tool or your AI agent - before you save
-- **Import SQL that updates** (v2.13.0) - a re-import updates tables already on the diagram, marking each New, Updated, or Unchanged
 
 ## Building now
 
