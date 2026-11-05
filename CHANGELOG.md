@@ -2,6 +2,36 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.14.2 - 2026-11-05
+- ✨ Import from other modelling tools onto a blank canvas: Import Visual Paradigm reads a .vpp project or its XML export, Import MySQL Workbench reads an EER diagram from a .mwb model, Import Navicat reads a diagram from a .nmodel (MySQL, PostgreSQL, SQLite, and SQL Server), and Import DbSchema reads a diagram from a .dbs project on all five databases. Each keeps the tool's table positions and hand-picked colours, and DbSchema groups become legends.
+- ✨ Import DBML is back as a blank-canvas button: tables, refs, and enums arrive with their checks and increments, and table groups, notes, and partials are counted as skipped.
+- ✨ A model imported into another database's diagram converts its column types and counts what that database cannot express, instead of writing invalid DDL.
+- ✨ Cloudflare D1: a SQLite connection can read a D1 database over Cloudflare's API - schema and row counts, read-only, never migrated. Pick the database from the account's list or paste its id.
+- ✨ PostgreSQL column collations are read, written on CREATE TABLE, ADD COLUMN, and ALTER COLUMN TYPE, and picked in the field dialog from the database's own list.
+- ✨ Selecting several tables offers Change color: one colour for all of them in one undo step, also on a structure-locked diagram.
+- 🔧 Auto Layout is a reading-order grid: parents above or left of their children, the canvas near 3:2, and its lines routed. The first picture after connecting a database has its relationship lines routed once.
+- 🔧 An import onto a blank canvas lands arranged and routed, and a file that keeps positions sizes each table to its fields. File imports open the file picker first, so a cancel leaves the screen as it was.
+- 🔧 Dragging a table fills in every legend that wholly holds it, showing which legend it moves with.
+- 🔧 The check constraint dialog parses the expression with the database's grammar and blocks a column the table does not have. A hand-typed `column IN (...)` check is saved with its values, so the column is underlined like an imported one.
+- 🔧 A database view cannot be deleted from a diagram; the Delete key and the entity menu say views are dropped in the database.
+- 🐛 The check expression and custom default inputs turn spell checking off, so macOS keeps the straight quotes SQL needs.
+- 🐛 Growing an entity over its relation's first bend moves the bend back outside the new edge, so the line no longer starts hidden under the table.
+- 🐛 Preview changes no longer flashes when a connected diagram opens.
+- 🐛 A PostgreSQL type change keeps the column's collation instead of resetting a `COLLATE "C"` column to the default.
+
+## v2.14.1 - 2026-11-03
+- ✨ The MCP panel adds or removes Schemity in Claude Code, Claude Desktop, Cursor, Codex, and OpenCode with one button each, writing that app's own config file. The by-hand snippets and Streamable HTTP stay for other clients.
+- ✨ CockroachDB connects as PostgreSQL: the schema reads as it does on PostgreSQL, impact analysis takes row counts from CockroachDB's own statistics, and the migration dialog warns that CockroachDB commits each schema change on its own.
+- ✨ Save draft and close in the migration dialog puts a connected diagram aside in a draft file without a prompt; reopening it restores the draft as one unsaved step, and the diagram list marks a waiting draft with an asterisk.
+- ✨ Click an entity or legend on the minimap to select it, as a click on the canvas does, Shift-click adding an entity to the selection; a drag still pans.
+- 🔧 Refresh & merge is now Refresh, in the toolbar, the command palette, and notices.
+- 🔧 Changing only when a PostgreSQL foreign key is checked plans ALTER CONSTRAINT instead of dropping and re-adding the key. Migration-file analysis reads ALTER CONSTRAINT ... DEFERRABLE, and converting a PostgreSQL diagram says what its deferrable keys become on each target database.
+- 🔧 Impact analysis knows TimescaleDB hypertables and continuous aggregates, reports no table rewrite for a MySQL VARCHAR or VARBINARY that grows without crossing 255 bytes, and drops the UNIQUE finding on a new column with no default where NULLs never collide.
+- 🔧 History and get_pending_changes report a changed ON DELETE, ON UPDATE, or Checked on a relation.
+- 🔧 Saving a connected diagram keeps its arrangement whatever the migration does.
+- 🐛 Changing a unique constraint's color, or renaming one of its columns, keeps the constraint's name, so neither is planned as a drop and re-add.
+- 🐛 A diagram or Context Map that fits the window no longer scrolls, even when content sits close to an edge.
+
 ## v2.14.0 - 2026-10-30
 - ✨ Snowflake connects live, read-only: sign in with a key pair or a programmatic access token, and Schemity reads one schema's tables, columns, keys, views, and dynamic tables over Snowflake's SQL REST API, with no warehouse needed. A connected Snowflake diagram is structure-locked - entities, fields, keys, and real relations come from the warehouse, while descriptions, layout, legends, context views, and virtual relations stay editable - and it is never migrated. Database changed shows what the warehouse changed, and a table the role can no longer see reads as not visible, never dropped.
 - ✨ Vector columns on every database: pgvector `vector(1536)`, `halfvec(768)`, and `sparsevec(30000)`, MySQL 9 `VECTOR(n)`, SQL Server 2025 `VECTOR(n)`, and Snowflake `VECTOR(FLOAT, n)` keep their dimension through the live reader, Import SQL, and every export, and dialect conversion maps them between databases. The field dialog's length field reads Dimensions for a vector type.

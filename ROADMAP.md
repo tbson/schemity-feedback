@@ -4,14 +4,14 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **Import from other modelling tools** (v2.14.2) - Visual Paradigm, MySQL Workbench, Navicat, DbSchema, and DBML onto a blank canvas, keeping positions and colours
+- **Reading-order Auto Layout** (v2.14.2) - parents above or left of their children, the canvas near 3:2, lines routed
+- **Cloudflare D1** (v2.14.2) - read a D1 database's schema and row counts over Cloudflare's API, read-only
+- **One-click MCP setup** (v2.14.1) - add or remove Schemity in Claude Code, Claude Desktop, Cursor, Codex, and OpenCode with one button
+- **CockroachDB** (v2.14.1) - connects as PostgreSQL, with row counts from CockroachDB's own statistics
 - **Snowflake live connection** (v2.14.0) - connect read-only with a key pair or access token; Schemity reads the schema, structure-locks the diagram, and shows warehouse drift
 - **Vector columns everywhere** (v2.14.0) - pgvector, MySQL 9, SQL Server 2025, and Snowflake vectors keep their dimension, and pgvector HNSW and IVFFlat indexes keep their options
 - **Several migration files as one** (v2.13.3) - analyze a Flyway or Prisma folder in order, rollback files left out
-- **Change preview shows every change** (v2.13.2) - changed tables bordered, key, constraint, and index changes counted in the footer, and Preview changes one click away from your own edits
-- **Auto increment on every database** (v2.13.1) - set it from the field editor anywhere, with start and step on PostgreSQL, SQL Server, and Snowflake
-- **Real-schema round trips** (v2.13.1) - SQL from an imported script or a live database rebuilds the same tables, keys, constraints, and indexes, checked against real PostgreSQL, MySQL, SQL Server, and SQLite schemas
-- **Virtual relations menu** (v2.13.1) - show, hide, or remove virtual relations in one place, and turn off inferring them per connection
-- **SQL conversion between databases** (v2.13.0) - Get SQL and Export > SQL file write the same tables for PostgreSQL, MySQL, SQL Server, SQLite, or Snowflake, with a report of every changed type, checked against real engines
 
 ## Building now
 
