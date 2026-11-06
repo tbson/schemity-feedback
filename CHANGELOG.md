@@ -2,6 +2,21 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.14.3 - 2026-11-06
+- ✨ CockroachDB is its own database type, with its logo and port 26257 in the connection dialog; a PostgreSQL diagram already pointed at CockroachDB keeps working. Migrations and exported scripts keep INTEGER 32-bit, and the type, index, and collation lists offer only what CockroachDB takes.
+- ✨ Six CockroachDB lint rules: sequential primary key, sequential index, unsupported type, unsupported index, deferrable foreign key, and a collation that is not a locale.
+- ✨ Clean diagram in the diagram list's right-click menu resets a diagram to its just-created connection once its exact name is typed.
+- ✨ Import Navicat reads a MariaDB model into a MySQL diagram, turning its PERSISTENT, JSON, INET6, and INET4 columns into MySQL's.
+- 🔧 Auto Layout is force-directed again, kept between square and twice as wide as tall, with unrelated tables in rows below or columns beside the rest. No layout routes lines any more - a first open, a blank-canvas import, and both layouts leave them straight, and Route relations routes them.
+- 🔧 CockroachDB hash-sharded indexes and primary keys keep their sharding through a save, a bucket count change, and an export, and the index dialog shows it. A primary key change there runs as one ALTER TABLE.
+- 🔧 Impact analysis reports no held-back reads or writes on CockroachDB, which changes a schema online.
+- 🔧 The canvas control buttons grow under the pointer and show a label saying what they do.
+- 🔧 The diagram footer names a CockroachDB server with its version and stays on one line in a narrow window.
+- 🔧 Import Navicat names a refused model by its database rather than Navicat's type id.
+- 🐛 A MySQL connection to a MariaDB server connects instead of spinning until it times out, and MariaDB tables created WITH SYSTEM VERSIONING are read instead of missing from the diagram.
+- 🐛 CockroachDB indexes are read with their own key columns and without the hidden shard column.
+- 🐛 Right-clicking a relation's waypoint opens the relation menu instead of the canvas menu.
+
 ## v2.14.2 - 2026-11-05
 - ✨ Import from other modelling tools onto a blank canvas: Import Visual Paradigm reads a .vpp project or its XML export, Import MySQL Workbench reads an EER diagram from a .mwb model, Import Navicat reads a diagram from a .nmodel (MySQL, PostgreSQL, SQLite, and SQL Server), and Import DbSchema reads a diagram from a .dbs project on all five databases. Each keeps the tool's table positions and hand-picked colours, and DbSchema groups become legends.
 - ✨ Import DBML is back as a blank-canvas button: tables, refs, and enums arrive with their checks and increments, and table groups, notes, and partials are counted as skipped.
