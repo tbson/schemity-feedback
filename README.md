@@ -50,7 +50,7 @@ Break a large schema into context views - auth, billing, analytics - while the m
 Schemity writes plain JSON into a folder you choose, so a reorganization by your agent is [reviewed in a pull request](https://schemity.com/blog/erd-lives-in-your-git-repo/) as a diff, like any other change: versioned, branched, and revertible.
 
 **You can only draw what a database would accept.**
-A foreign key targets the parent's primary key, cardinality follows that key's uniqueness, referential actions are set per relationship, and duplicate table names are refused - so a diagram that looks valid is valid. Schema lint then checks twenty-six classes of problem and marks them on the diagram itself.
+A foreign key targets the parent's primary key, cardinality follows that key's uniqueness, referential actions are set per relationship, and duplicate table names are refused - so a diagram that looks valid is valid. Schema lint then checks forty-six classes of problem and marks them on the diagram itself.
 
 **One purchase, and no meter on your model.**
 No per-seat subscription and no cap on tables, diagrams, workspaces, or context views - [no reason to merge two entities to stay under a quota](https://schemity.com/blog/your-erd-tool-shouldnt-count-your-tables/).
@@ -206,7 +206,7 @@ Honest, detailed comparisons with the tools people usually evaluate alongside Sc
 - Exported SQL creates tables with their constraints inline - primary keys, unique and check constraints, and foreign keys inside CREATE TABLE, emitted in dependency order, with ALTER statements only where a deferred foreign key needs one; every database writes NOT NULL on a primary key, and SQL Server scripts start with SET ANSI_NULLS ON and SET QUOTED_IDENTIFIER ON
 
 ### Schema Lint
-- Twenty-six classes of schema problem, plus six for CockroachDB - including a SQL Server foreign key whose type differs from its key and a pgvector index PostgreSQL would refuse, a utf8mb3 table that refuses emoji, and a multi-column foreign key paired crosswise - checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
+- Forty classes of schema problem, plus six for CockroachDB - including a SQL Server foreign key whose type differs from its key and a pgvector index PostgreSQL would refuse, a utf8mb3 table that refuses emoji, and a multi-column foreign key paired crosswise - checked offline against the diagram and reported on the diagram itself: a colored strip in the margin marks the exact entity and the exact field row, with a count beside entities carrying more than one
 - Findings are grouped by consequence - fails at runtime, constraint unenforced, permanent cost, convention worth confirming - rather than graded on a severity scale, and each one jumps to its entity on the canvas or opens the dialog that resolves it; the drawer searches findings and opens at once on a large schema, 50 per section with Show more
 - It knows a correct link table from a broken one: a composite primary key over the foreign key pair and a surrogate id plus a unique constraint on that pair are both accepted, while a multi-column unique containing a nullable column - which enforces nothing, because NULLs compare as distinct - is caught
 - A live count badge on the Lint button, colored by the most serious finding, works whether or not the mode is open
