@@ -2,6 +2,59 @@
 
 Release notes for [Schemity](https://schemity.com), the offline desktop ERD tool. Newest first. Download the latest version at [schemity.com](https://schemity.com/#platforms).
 
+## v2.14.8 - 2026-11-15
+- ✨ Star a diagram to list it in a Starred group above the workspaces, across every workspace, reorderable by dragging.
+- ✨ Import Schemity JSON on a blank canvas fills the empty diagram with the file's tables, relations, legends, context views, and Context Map as one undoable change, keeping the diagram's own connection.
+- ✨ Dragging a table or legend snaps to a standard 34 px gap from the neighbour it faces, drawn as a band, and snaps back to the row or column it started on, so a move along one axis stays exact.
+- ✨ Opening a diagram whose database does not answer can be called off with Escape.
+- 🔧 With every entity selected, dragging a legend moves the whole diagram, every entity and legend together.
+- 🔧 Lint reports a MySQL table in utf8mb3 as one finding naming its string columns, instead of one finding per column.
+- 🔧 Impact analysis on MySQL reports a column's move to another character set as a table copy where MySQL copies it, and reads ALTER TABLE ... CONVERT TO CHARACTER SET from a migration file.
+- 🔧 After an agent groups, arranges, or routes tables, the whole picture moves to the canvas's top-left.
+- 🐛 Converting to another database writes a foreign key with ON DELETE SET NULL (some columns) as NO ACTION, with a note naming the columns to clear, instead of a plain SET NULL that cleared the tenant column too.
+- 🐛 A MySQL character set and collation left on a field of another database's diagram are no longer written into its SQL.
+- 🐛 A table or legend dragged slowly no longer flickers on and off a guide, and a legend dropped on a relation's bend no longer leaves a diagonal line.
+
+## v2.14.7 - 2026-11-11
+- ✨ Refresh keeps unsaved edits with a three-way merge: the database's changes come in, yours stay pending, and where both changed the same column, key, or table yours stays and the conflict is named.
+- ✨ MariaDB is its own database type with its logo, supported from 11.4, with VECTOR columns and indexes on 11.7 and later. INVISIBLE columns are read, kept, and written on MySQL and MariaDB.
+- ✨ An agent lays tables out in rows with arrange_entities; Schemity spaces them and routes the relations.
+- 🔧 Tables the database added get a solid outer ring and their own minimap colour after an open, Refresh, or Reset ERD, and the Database changed button lists only what the database changed.
+- 🔧 A change preview lints the whole schema as the change leaves it, so a finding that needs a table off the picture still shows.
+- 🔧 MySQL and MariaDB ENUM and SET values compare under the column's collation: a case-only relabel is an in-place change on a case-insensitive one, and a dropped value with its row count on a _bin or _cs one.
+- 🔧 Ctrl/Cmd+W closes the topmost dialog, drawer, or change preview before it closes the diagram.
+- 🐛 On MariaDB a migration keeps UUID, INET6, and INET4 columns as they are, where a UUID made nullable was rewritten as VARCHAR(255).
+
+## v2.14.6 - 2026-11-08
+- 🔧 The redundant foreign key path lint finding names the fix: a composite key carrying the tenant column, plus the unique constraint it needs on the parent.
+- 🐛 A diagram reopened after a migration no longer shows Database changed for a database nobody touched.
+- 🐛 A diagram closed and opened again no longer spins on Loading data forever.
+
+## v2.14.5 - 2026-11-08
+- ✨ Drawing a relation to a table whose unique key holds its primary key plus a tenant column makes a composite foreign key that keeps rows inside one tenant. ON DELETE SET NULL (column) on PostgreSQL 15+ is read, kept, and written, so a composite key clears only its own column.
+- ✨ New lint rule: a multi-column foreign key whose columns are paired crosswise, which the database creates and then refuses correct rows under.
+- ✨ Each uniqueness rule on a table draws its U marker in its own colour.
+- ✨ MySQL ENUM and SET value changes are migrated, with impact saying which changes copy the table and how many rows hold a removed value.
+- ✨ Three MCP prompts, listed by agent hosts as ready-made workflows: organize a diagram by domain, review a migration before it runs, and design the schema for a feature.
+- ✨ An agent's impact analysis says when the database changed since the diagram loaded, so it never hands over a migration computed against a stale schema. Agents can also create partial indexes and generated columns.
+- 🔧 The minimap is free on every tier, Schemity Lite included.
+- 🔧 Impact analysis tells a type change that can fail on existing rows from one that loses data.
+- 🔧 On PostgreSQL and CockroachDB a foreign key whose only change is its name is renamed in place instead of dropped and re-added.
+- 🔧 Lint stops flagging sound tenant keys, tells a delete the database refuses from one that only may fail, and accepts a CHECK that rules out the empty string on a nullable string column.
+- 🔧 Relation lines cross a legend's title band but never run along it.
+- 🐛 Changing a key's type takes every column referencing it to the same type, width, and sign, so widening a MySQL key no longer fails on its foreign keys.
+- 🐛 A MySQL function default such as DEFAULT (JSON_OBJECT()) is written as an expression instead of quoted text.
+- 🐛 SQL Server migrations run as one sqlcmd or SSMS batch when two defaulted columns change together.
+- 🐛 A column an agent renames takes its indexes and checks along with it.
+
+## v2.14.4 - 2026-11-06
+- ✨ Eight new lint rules, checked against each database: a key on a type the database cannot index, a key longer than an index entry, SQL Server's multiple cascade paths, a SQL Server unique index over a nullable column, SQL Server DATETIME rounding, MySQL SET DEFAULT that acts as RESTRICT, MySQL utf8mb3 columns that refuse emoji, and SQLite STRING columns with numeric affinity.
+- ✨ The Schema field in the diagram dialog loads the database's schemas from a refresh button, through an SSH tunnel or password command too, and still takes a typed name.
+- 🔧 The diagram dialog is half as tall, with Connection and Options tabs.
+- 🔧 The toolbar is regrouped by job, each group named at the top of its buttons' tooltips.
+- 🔧 On an empty main diagram the + button pulses until the first entity exists, and the Entity, Field, Legend, and import drawers keep Cancel beside their action in the footer.
+- 🔧 Existing lint rules follow what each database actually accepts, and the MySQL relation dialog no longer offers SET DEFAULT.
+
 ## v2.14.3 - 2026-11-06
 - ✨ CockroachDB is its own database type, with its logo and port 26257 in the connection dialog; a PostgreSQL diagram already pointed at CockroachDB keeps working. Migrations and exported scripts keep INTEGER 32-bit, and the type, index, and collation lists offer only what CockroachDB takes.
 - ✨ Six CockroachDB lint rules: sequential primary key, sequential index, unsupported type, unsupported index, deferrable foreign key, and a collation that is not a locale.

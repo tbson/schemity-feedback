@@ -4,13 +4,14 @@ What we recently shipped, what we are building, and what we are considering. Thi
 
 ## Recently shipped
 
+- **Starred diagrams** (v2.14.8) - a Starred group above the workspaces, across every workspace
+- **Import Schemity JSON onto a blank canvas** (v2.14.8) - fill an empty diagram from a file, keeping its own connection
+- **Standard spacing** (v2.14.8) - tables and legends snap to a 34 px gap from their neighbour and back to the row or column they started on
+- **Refresh keeps your edits** (v2.14.7) - a three-way merge brings the database's changes in and keeps yours pending
+- **MariaDB as its own database** (v2.14.7) - supported from 11.4, with VECTOR and INVISIBLE columns
+- **Tenant-safe foreign keys** (v2.14.5) - a relation to a tenant key becomes a composite foreign key, with ON DELETE SET NULL (column) on PostgreSQL 15+
+- **MCP prompts** (v2.14.5) - ready-made agent workflows: organize by domain, review a migration, design a feature
 - **CockroachDB as its own database** (v2.14.3) - its own type, INTEGER kept 32-bit, hash-sharded indexes kept, and six CockroachDB lint rules
-- **Clean diagram** (v2.14.3) - reset a diagram to its just-created connection from the diagram list
-- **Import from other modelling tools** (v2.14.2) - Visual Paradigm, MySQL Workbench, Navicat, DbSchema, and DBML onto a blank canvas, keeping positions and colours
-- **Cloudflare D1** (v2.14.2) - read a D1 database's schema and row counts over Cloudflare's API, read-only
-- **One-click MCP setup** (v2.14.1) - add or remove Schemity in Claude Code, Claude Desktop, Cursor, Codex, and OpenCode with one button
-- **Snowflake live connection** (v2.14.0) - connect read-only with a key pair or access token; Schemity reads the schema, structure-locks the diagram, and shows warehouse drift
-- **Vector columns everywhere** (v2.14.0) - pgvector, MySQL 9, SQL Server 2025, and Snowflake vectors keep their dimension, and pgvector HNSW and IVFFlat indexes keep their options
 
 ## Building now
 
